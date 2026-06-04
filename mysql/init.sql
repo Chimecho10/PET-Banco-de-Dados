@@ -3,7 +3,7 @@ use app_db;
 CREATE TABLE users(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(80) UNIQUE NOT NULL,
-    senha_hash VARCHAR(255) NOT NULL,
+    senha_hash VARCHAR(255),
     cpf  CHAR(11) NOT NULL UNIQUE,
     nome VARCHAR(80) NOT NULL,
     adm BOOL DEFAULT FALSE,
