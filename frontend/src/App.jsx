@@ -16,9 +16,6 @@ function App() {
   const [abaCertificados, setAbaCertificados] = useState(false);
   const [abaAdicionarEvento, setAbaAdicionarEvento] = useState(false);
 
-  // Variável se o Usuário é ADM ou não
-  const [admin, setAdmin] = useState(false);
-
   // Variáveis de Login
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
@@ -29,6 +26,11 @@ function App() {
   const [senha2, setSenha2] = useState('');
   const [cpf, setCpf] = useState('');
   const [nome, setNome] = useState('');
+
+  // Variáveis do Usuário Logado
+  const [userLogado, setUserLogado] = useState('');
+  const [userCpf, setUserCPF] = useState('');
+  const [admin, setAdmin] = useState(false);
 
   // Variáveis de Evento
   const [nomeDoEvento, setNomeDoEvento] = useState('');
@@ -61,6 +63,8 @@ function App() {
   }
 
   const voltarAbaInicial = () => {
+    setCpf('');
+    setNome('');
     setUsuarioCadastro('');
     setSenha1('');
     setSenha2('');
@@ -84,14 +88,42 @@ function App() {
     evento.preventDefault();
   }
 
-  const cadastro = (evento) => { // Conectar com o Banco de Dados / Backend
+  const cadastro = async (evento) => { // Conectar com o Banco de Dados / Backend
     evento.preventDefault()
     if (usuarioCadastro === '' || senha1 === '' || senha2 === '' || cpf === '' || nome === '')
-       {alert("Espaços em branco")}
+       {alert("Espaços em branco");
+        return;}
+    else if (cpf.length !== 11)
+       {alert("CPF Inválido");
+        return;}
     else if (senha1 !== senha2) 
        {setSenha1('');
         setSenha2('');
-        alert("Senhas não compatíveis")}
+        alert("Senhas não compatíveis");
+        return;}
+        
+    const dados =
+     {userD: usuarioCadastro,
+      senhaD: senha1,
+      cpfD: cpf,
+      nomeD: nome,}
+    
+    try{
+      const resp = await fetch('http://127.0.0.1:8000/cadastro', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(dados)});
+
+      if (resp.ok)
+       {setUserLogado(usuarioCadastro);
+        setUserCPF(cpf);
+        setAbaSigin(false);
+        setAbaLobby(true);}}
+
+    catch{
+      alert("Erro ao Cadastrar");
+    }
+
   }
 
   const procurarEvento = (evento) => {
@@ -264,7 +296,7 @@ function App() {
             <div className= 'letreiroDiscoInput2'
             >Nome:</div>
 
-            <input type = "password"
+            <input type = "text"
                   value = {nome}
                   onChange = {(nome) => setNome(nome.target.value)}
                   className = 'campo2'>   
@@ -277,10 +309,16 @@ function App() {
             <div className= 'letreiroDiscoInput2'
             >CPF:</div>
 
-            <input type = "password"
-                  value = {cpf}
-                  onChange = {(cpf) => setCpf(cpf.target.value)}
-                  className = 'campo2'>   
+            <input type = "text"
+                   inputmode="numeric" 
+                   pattern="[0-9]*" 
+                   value = {cpf}
+                   onChange = {(cpf) => 
+                               {const dig = cpf.target.value;
+                                const tig = dig.replace(/\D/g, '');
+                                if (tig.length <= 11)
+                                {setCpf(tig)}}}
+                   className = 'campo2'>   
             </input>
           </div>
 

@@ -1,1 +1,1 @@
-from .users import UserSchema, UserModel, LoginSchema
+from .users import UserSchema, UserModel, LoginSchema, UpdateSchema
