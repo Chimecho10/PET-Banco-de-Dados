@@ -8,6 +8,60 @@
   src: url('./assets/fontes/Montserrat-Regular.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: 'Sifonn';
+  src: url('./assets/fontes/Syphon-Bold.woff2') format('woff2');
+}
+
+.blocaoPreto {
+  background-color: #222222;
+  height: 65px;
+  margin: 10px 10px 0px 10px;
+  border-radius: 0.8rem;
+}
+
+.letreiro2 {
+  text-shadow: 5px 0px 2px #000000fd;
+  user-select: none;
+  color: #000000;
+  font-family: 'Sifonn', serif;
+  letter-spacing: 2px;
+  font-size: 90px;
+}
+
+.blocaoVermelho {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  background-color: #c60006;
+  height: 200px;
+  border-radius: 1rem;
+}
+
+.bloquinhoAmarelo {
+  user-select: none;
+  font-family: 'Montserrat', serif;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  height: 45px;
+  width: 210px;
+  border-radius: 1.0rem;
+  background-color: #f4ae31;
+  transition: 0.8s, ease;
+}
+
+.bloquinhoAmarelo:active {
+  box-shadow: none;
+}
+
+.bloquinhoAmarelo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0px 1px 1px 1px #000000;
+}
+
 .universidade {
   font-family: 'Montserrat', serif;
   user-select: none;
@@ -57,6 +111,29 @@
   text-shadow: 0px 0px 10px #08080857;
 }
 
+.cadastroVoltar {
+  user-select: none;
+  cursor: pointer;
+  color: black;
+  border: none;
+  height: 30px;
+  width: 60px;
+  border-radius: 0.8rem;
+  background-color: #797979;
+  box-shadow: 0px 1px 2px 0px #000000;
+  transition: 0.08s;
+}
+
+.cadastroVoltar:hover {
+  box-shadow: 0px 2px 2px 1px #000000be;
+  transform: translateY(-2px);
+}
+
+.cadastroVoltar:active {
+  transform: translateY(0px);
+  box-shadow: 0px 1px 2px 0px #000000;
+}
+
 .letreiroDiscoInput{
   user-select: none;
   font-family: 'Montserrat', serif;
@@ -65,6 +142,50 @@
   margin-top: 3px;
   margin-left: 25px;
   color:black;
+}
+
+.letreiroDiscoInput2{
+  user-select: none;
+  font-family: 'Montserrat', serif;
+  display: flex;
+  font-size: 20px;
+  margin-top: 3px;
+  margin-left: 25px;
+  color:black;
+}
+
+.discoInput2{
+  user-select: none;
+  display: flex;
+  align-items: center;
+  background-color: #f1e3c9;
+  width: 400px;
+  height: 70px;
+  border-radius: 1.8rem;
+  flex-shrink: 0;
+}
+
+.enviarCadastro {
+  user-select: none;
+  cursor: pointer;
+  color: black;
+  border: none;
+  height: 30px;
+  width: 60px;
+  border-radius: 0.8rem;
+  background-color: #c78787;
+  box-shadow: 0px 1px 2px 0px #000000;
+  transition: 0.08s;
+}
+
+.enviarCadastro:hover {
+  box-shadow: 0px 2px 2px 1px #000000be;
+  transform: translateY(-2px);
+}
+
+.enviarCadastro:active {
+  transform: translateY(0px);
+  box-shadow: 0px 1px 2px 0px #000000;
 }
 
 .discoInput{
