@@ -13,6 +13,55 @@
   src: url('./assets/fontes/Syphon-Bold.woff2') format('woff2');
 }
 
+.letreiro4 {
+  font-family: 'Montserrat', serif;
+  letter-spacing: 1px;
+  font-size: 30px;
+}
+
+.campo3 {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  width: 160px;
+}
+
+.linhavertical{
+  background-color: #4e4e4e;
+  width: 1px;
+  height: 40px;
+  margin-left: 10px;
+  margin-right: 15px;
+}
+
+.procurando {
+  background-color: #ffffff;
+  border-style: solid;
+  border-color: #4e4e4e;
+  border-width: 1px;
+  height: 40px;
+  width: 250px;
+  border-radius: 0.8rem;
+  box-shadow: 5px 5px 0px 1px #c60006;
+  display: flex;
+  justify-content: center;
+  align-items: center;}
+
+.linhavermelha {
+  width: 250px;
+  height: 5px;
+  border-radius: 0.2rem;
+  background-color: #900002;
+  border: none;
+}
+
+.letreiro3 {
+  letter-spacing: 2px;
+  font-family: 'Montserrat', serif;
+  font-weight: bold;
+  font-size: 30px;
+}
+
 .blocaoPreto {
   background-color: #222222;
   height: 65px;

@@ -3,6 +3,8 @@ import './App.css'
 
 import petlogo from './assets/imagens/petlogo.png'
 import petlogo2 from './assets/imagens/petlogo2.png'
+import lupa from './assets/imagens/lupa.png'
+import adicionar from './assets/imagens/adicionar.png'
 
 function App() {
   // Abas
@@ -12,6 +14,7 @@ function App() {
   const [abaEventos, setAbaEventos] = useState(false);
   const [abaParticipantes, setAbaParticipantes] = useState(false);
   const [abaCertificados, setAbaCertificados] = useState(false);
+  const [abaAdicionarEvento, setAbaAdicionarEvento] = useState(false);
 
   // Variável se o Usuário é ADM ou não
   const [admin, setAdmin] = useState(false);
@@ -24,13 +27,23 @@ function App() {
   const [usuarioCadastro, setUsuarioCadastro] = useState('');
   const [senha1, setSenha1] = useState('');
   const [senha2, setSenha2] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [nome, setNome] = useState('');
+
+  // Variáveis de Evento
+  const [nomeDoEvento, setNomeDoEvento] = useState('');
 
   useEffect(() => {
-    if (abaLobby){
+    if (!abaInicial && !abaSigin){
       document.documentElement.setAttribute('cor', 'amarelo');}
     else {
       document.documentElement.removeAttribute('cor');}
-  }, [abaLobby])
+  }, [abaInicial])
+
+  const adicionarEvento = () => {
+    setAbaEventos(false);
+    setAbaAdicionarEvento(true);
+  }
 
   const eventos = () => {
     setAbaEventos(true);
@@ -73,13 +86,16 @@ function App() {
 
   const cadastro = (evento) => { // Conectar com o Banco de Dados / Backend
     evento.preventDefault()
-    if (usuarioCadastro === '' || senha1 === '' || senha2 === '')
+    if (usuarioCadastro === '' || senha1 === '' || senha2 === '' || cpf === '' || nome === '')
        {alert("Espaços em branco")}
     else if (senha1 !== senha2) 
        {setSenha1('');
         setSenha2('');
         alert("Senhas não compatíveis")}
+  }
 
+  const procurarEvento = (evento) => {
+    evento.preventDefault()
   }
 
   if (abaInicial){
@@ -213,7 +229,7 @@ function App() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    marginTop:'200px'}}>
+                    marginTop:'100px'}}>
             
         <div className='gerenciamento'
             style = {{marginBottom:'15px',
@@ -246,6 +262,32 @@ function App() {
               style = {{marginTop:'8px'}}>
 
             <div className= 'letreiroDiscoInput2'
+            >Nome:</div>
+
+            <input type = "password"
+                  value = {nome}
+                  onChange = {(nome) => setNome(nome.target.value)}
+                  className = 'campo2'>   
+            </input>
+          </div>
+
+          <div className= 'discoInput2'
+              style = {{marginTop:'8px'}}>
+
+            <div className= 'letreiroDiscoInput2'
+            >CPF:</div>
+
+            <input type = "password"
+                  value = {cpf}
+                  onChange = {(cpf) => setCpf(cpf.target.value)}
+                  className = 'campo2'>   
+            </input>
+          </div>
+
+          <div className= 'discoInput2'
+              style = {{marginTop:'8px'}}>
+
+            <div className= 'letreiroDiscoInput2'
             >Senha:</div>
 
             <input type = "password"
@@ -268,15 +310,15 @@ function App() {
             </input>
           </div>
 
-            <button onClick = {voltarAbaInicial}
-                    className='cadastroVoltar'
-                    style = {{marginRight: '30px'}}
-            >Voltar</button>
-            
-            <button type = "submit"
-                    className='enviarCadastro'
-                    style = {{marginTop: '20px',}}
-            >Enviar</button>
+          <button onClick = {voltarAbaInicial}
+                  className='cadastroVoltar'
+                  style = {{marginRight: '30px'}}
+          >Voltar</button>
+          
+          <button type = "submit"
+                  className='enviarCadastro'
+                  style = {{marginTop: '20px',}}
+          >Enviar</button>
 
         </form>
       </div>
@@ -328,6 +370,74 @@ function App() {
                
         </div>
 
+      </div>
+    )
+  }
+
+  if (abaEventos){
+    return (
+      <div>
+        <div style = {{display:'flex',
+                        flexDirection:'row',
+                        justifyContent:'center'}}>
+          <div style = {{marginTop: '80px',
+                          marginRight: '150px',
+                          marginLeft: '200px',
+                          userSelect: 'none',
+            }}>
+            <h1 className = 'letreiro3'
+                style = {{marginBottom: '0px'}}        
+                >EVENTOS</h1>
+            <hr className = 'linhavermelha'
+                style = {{marginTop: '0px'}} />
+          </div>
+          <div className = 'procurando'
+                style = {{userSelect: 'none',
+                          marginLeft: '20px',
+                          marginTop: '105px',}}>
+              <form submit={procurarEvento}
+                    style = {{display: 'flex',
+                              flexDirection: 'row',
+                              alignItems: 'center'}}>
+                <input type = "text"
+                        value = {nomeDoEvento}
+                        placeholder='Procure Um Evento...'
+                        onChange = {(nomeDoEvento) => setNomeDoEvento(nomeDoEvento.target.value)}
+                        className = 'campo3'></input>
+                <div className = 'linhavertical'></div>
+                <button type = 'submit'
+                        style = {{border: 'none',
+                                  color: '#00000000',
+                                  cursor: 'pointer',
+                                  backgroundColor: '#00000000',}}>
+                  <img src={lupa} style = {{width: '25px',
+                                            marginLeft: '-5px'}}/>
+                </button>
+              </form>
+          </div>
+          <div>
+            <button  onClick = {adicionarEvento}
+                      style = {{marginTop: '109px',
+                              marginLeft: '20px',
+                              userSelect: 'none',
+                              border: 'none',
+                              cursor: 'pointer',
+                              backgroundColor: '#00000000',}}>
+              <img src={adicionar}/> 
+
+            </button>
+          </div>
+        </div>
+        <div style = {{display: 'flex',
+                       flexDirection: 'row',
+                       marginTop: '50px',
+                       gap: '90px',
+                       justifyContent: 'center'}}>
+          <div className='letreiro4'>EVENTO</div>
+          <div className='letreiro4'>DATA DE INÍCIO</div>
+          <div className='letreiro4'>DATA DE TÉRMINO</div>
+          <div className='letreiro4'>AÇÕES</div>
+        </div>
       </div>
     )
   }
