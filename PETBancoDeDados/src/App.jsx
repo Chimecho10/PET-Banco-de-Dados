@@ -11,9 +11,14 @@ function App() {
   const [abaParticipantes, setParticipantes] = useState(false);
   const [abaCertificados, setCertificados] = useState(false);
 
-  // Variável de Login, nó contendo os dados do usuário que logou
+  // Variáveis de Login
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
+
+  // Variáveis de Cadastro
+  const [usuarioCadastro, setUsuarioCadastro] = useState('');
+  const [senha1, setSenha1] = useState('');
+  const [senha2, setSenha2] = useState('');
 
   const voltarAbaInicial = () => {
     setAbaInicial(true);
@@ -37,7 +42,7 @@ function App() {
                      justifyContent:'center',
                      flexDirection: 'row',
                      userSelect: 'none',
-                     marginLeft:'20px'}}>
+                     marginLeft:'60px'}}>
         <div style = {{marginTop:'250px'}}>
 
           <div style = {{display: 'flex',
@@ -86,7 +91,8 @@ function App() {
 
               </div>
 
-              <button style = {{marginTop:'8px',
+              <button onClick = {sigin}
+                      style = {{marginTop:'8px',
                                 border:'none',
                                 cursor: 'pointer',
                                 outline:'none',
@@ -123,7 +129,7 @@ function App() {
         </div>
         <div style = {{userSelect:'none',
                        marginTop:'200px',
-                       marginLeft:'100px',
+                       marginLeft:'200px',
         }}>
         <img src={petlogo}/>
         </div>
@@ -149,15 +155,65 @@ function App() {
 
   if (abaSigin){
     return (
-      <div>
-        <div className= 'letreiro'>PET Certificados</div>
-        <div style = {{display: 'flex',
-                      justifyContent: 'center',
-                      gap: '50px'}}>
-          <button onClick = {sigin} className='botoes'>
-          Cadastrar</button>
-        </div>
-        </div>
+      <div style = {{display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    marginTop:'200px'}}>
+            
+        <div className='gerenciamento'
+            style = {{marginBottom:'15px',
+                      color:'#000000'
+        }}>GERENCIAMENTO DE</div>
+
+        <div className='gerenciamento'
+            style = {{marginBottom:'-50px',
+                      color:'#000000'
+        }}>CERTIFICADOS PET</div>
+
+        <div className= 'letreiro'>Cadastro</div>
+
+        <form onSubmit = {login}>
+          <div className= 'discoInput'
+              style = {{marginTop: '7px'}}>
+
+            <div className= 'letreiroDiscoInput'
+            >Usuário:</div>
+
+            <input type = "text"
+                  value = {usuario}
+                  onChange = {(user) => setUsuario(user.target.value)}
+                  className = 'campo1'>   
+            </input>
+          </div>
+
+          <div className= 'discoInput'
+              style = {{marginTop:'8px'}}>
+
+            <div className= 'letreiroDiscoInput'
+            >Senha:</div>
+
+            <input type = "password"
+                  value = {senha1}
+                  onChange = {(senha1) => setSenha(senha1.target.value)}
+                  className = 'campo2'>   
+            </input>
+          </div>
+
+          <div className= 'discoInput'
+              style = {{marginTop:'8px'}}>
+
+            <div className= 'letreiroDiscoInput'
+            >Senha:</div>
+
+            <input type = "password"
+                  value = {senha2}
+                  onChange = {(senha2) => setSenha(senha2.target.value)}
+                  className = 'campo2'>   
+            </input>
+          </div>
+        </form>
+      </div>
     )
   }
 
