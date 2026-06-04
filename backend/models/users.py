@@ -4,6 +4,13 @@ class LoginSchema(BaseModel):
     username: str
     senha: str
 
+class UpdateSchema(BaseModel):
+        id: int
+        username: str
+        senha: str
+        cpf: str
+        nome: str
+
 class UserSchema(BaseModel):
     username: str
     senha: str
