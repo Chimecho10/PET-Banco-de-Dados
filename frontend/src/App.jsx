@@ -1,15 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 import petlogo from './assets/imagens/petlogo.png'
+import petlogo2 from './assets/imagens/petlogo2.png'
 
 function App() {
   // Abas
   const [abaInicial, setAbaInicial] = useState(true);
   const [abaSigin, setAbaSigin] = useState(false);
+  const [abaLobby, setAbaLobby] = useState(false);
   const [abaEventos, setAbaEventos] = useState(false);
-  const [abaParticipantes, setParticipantes] = useState(false);
-  const [abaCertificados, setCertificados] = useState(false);
+  const [abaParticipantes, setAbaParticipantes] = useState(false);
+  const [abaCertificados, setAbaCertificados] = useState(false);
+
+  // Variável se o Usuário é ADM ou não
+  const [admin, setAdmin] = useState(false);
 
   // Variáveis de Login
   const [usuario, setUsuario] = useState('');
@@ -20,30 +25,78 @@ function App() {
   const [senha1, setSenha1] = useState('');
   const [senha2, setSenha2] = useState('');
 
+  useEffect(() => {
+    if (abaLobby){
+      document.documentElement.setAttribute('cor', 'amarelo');}
+    else {
+      document.documentElement.removeAttribute('cor');}
+  }, [abaLobby])
+
+  const eventos = () => {
+    setAbaEventos(true);
+    setAbaLobby(false);
+  }
+
+  const participantes = () => {
+    setAbaParticipantes(true);
+    setAbaLobby(false);
+  }
+  
+  const certificados = () => {
+    setAbaCertificados(true);
+    setAbaLobby(false);
+  }
+
   const voltarAbaInicial = () => {
+    setUsuarioCadastro('');
+    setSenha1('');
+    setSenha2('');
     setAbaInicial(true);
     setAbaSigin(false);
   }
 
   const sigin = () => {
+    setUsuario('');
+    setSenha('');
     setAbaInicial(false);
     setAbaSigin(true);
   }
 
-  const login = (evento) => {
+  const ir = () => {
+    setAbaInicial(false);
+    setAbaLobby(true);
+  }
+
+  const login = (evento) => { // Conectar com o Banco de Dados / Backend
     evento.preventDefault();
+  }
+
+  const cadastro = (evento) => { // Conectar com o Banco de Dados / Backend
+    evento.preventDefault()
+    if (usuarioCadastro === '' || senha1 === '' || senha2 === '')
+       {alert("Espaços em branco")}
+    else if (senha1 !== senha2) 
+       {setSenha1('');
+        setSenha2('');
+        alert("Senhas não compatíveis")}
+
   }
 
   if (abaInicial){
     return (
       <div>
+      <button onClick={ir}
+              style = {{position: 'absolute',
+                        justifyContent:'center'}}>
+      Ir</button>
       <div style = {{display:'flex',
                      alignItems: 'center',
                      justifyContent:'center',
                      flexDirection: 'row',
                      userSelect: 'none',
                      marginLeft:'60px'}}>
-        <div style = {{marginTop:'250px'}}>
+
+        <div style = {{marginTop:'200px'}}>
 
           <div style = {{display: 'flex',
                         alignItems: 'center',
@@ -91,7 +144,9 @@ function App() {
 
               </div>
 
-              <button onClick = {sigin}
+            </form>
+
+            <button onClick = {sigin}
                       style = {{marginTop:'8px',
                                 border:'none',
                                 cursor: 'pointer',
@@ -115,7 +170,6 @@ function App() {
                     Novo Cadastro</h1>
                 </div>
               </button>
-            </form>
 
             <hr style = {{color: '#000000',
                           backgroundColor: '#000000',
@@ -167,59 +221,116 @@ function App() {
         }}>GERENCIAMENTO DE</div>
 
         <div className='gerenciamento'
-            style = {{marginBottom:'-50px',
+            style = {{marginBottom:'-70px',
                       color:'#000000'
         }}>CERTIFICADOS PET</div>
 
         <div className= 'letreiro'>Cadastro</div>
 
-        <form onSubmit = {login}>
-          <div className= 'discoInput'
-              style = {{marginTop: '7px'}}>
+        <form onSubmit = {cadastro}>
 
-            <div className= 'letreiroDiscoInput'
+          <div className= 'discoInput2'
+              style = {{marginTop: '-20px'}}>
+
+            <div className= 'letreiroDiscoInput2'
             >Usuário:</div>
 
             <input type = "text"
-                  value = {usuario}
-                  onChange = {(user) => setUsuario(user.target.value)}
+                  value = {usuarioCadastro}
+                  onChange = {(user) => setUsuarioCadastro(user.target.value)}
                   className = 'campo1'>   
             </input>
           </div>
 
-          <div className= 'discoInput'
+          <div className= 'discoInput2'
               style = {{marginTop:'8px'}}>
 
-            <div className= 'letreiroDiscoInput'
+            <div className= 'letreiroDiscoInput2'
             >Senha:</div>
 
             <input type = "password"
                   value = {senha1}
-                  onChange = {(senha1) => setSenha(senha1.target.value)}
+                  onChange = {(senha1) => setSenha1(senha1.target.value)}
                   className = 'campo2'>   
             </input>
           </div>
 
-          <div className= 'discoInput'
+          <div className= 'discoInput2'
               style = {{marginTop:'8px'}}>
 
-            <div className= 'letreiroDiscoInput'
-            >Senha:</div>
+            <div className= 'letreiroDiscoInput2'
+            >Confirmação de Senha:</div>
 
             <input type = "password"
                   value = {senha2}
-                  onChange = {(senha2) => setSenha(senha2.target.value)}
+                  onChange = {(senha2) => setSenha2(senha2.target.value)}
                   className = 'campo2'>   
             </input>
           </div>
+
+            <button onClick = {voltarAbaInicial}
+                    className='cadastroVoltar'
+                    style = {{marginRight: '30px'}}
+            >Voltar</button>
+            
+            <button type = "submit"
+                    className='enviarCadastro'
+                    style = {{marginTop: '20px',}}
+            >Enviar</button>
+
         </form>
       </div>
     )
   }
 
-  return (
-    <h1>oi!</h1>
-  )
+  if (abaLobby){
+    return (
+      <div>
+        <div className = 'blocaoPreto'
+             style = {{display:'flex',
+                       justifyContent:'center',
+                       alignItems:'center',           
+             }}>
+          <div style = {{display: 'flex',
+                         gap: '10px'}}>
+            <button onClick={eventos}
+                    className='bloquinhoAmarelo'>
+            EVENTOS</button>
+            <button onClick={participantes}
+                    className='bloquinhoAmarelo'>
+            PARTICIPANTES</button>
+            <button onClick={certificados}
+                    className='bloquinhoAmarelo'>
+            CERTIFICADOS</button>
+          </div>
+        </div>
+        <div style = {{margin: '0 auto',
+                       flexDirection: 'column',
+                       height: '75vh',
+                       display: 'flex',
+                       marginTop: '-90px',
+                       justifyContent: 'center',
+                       alignItems: 'center',}}>
+          <h1 className= 'letreiro2'
+              style = {{marginBottom:'-40px'}}
+          >Gerenciamento</h1>
+          <h1 className= 'letreiro2'
+              style = {{marginBottom:'-40px'}}    
+          >de</h1>
+          <h1 className= 'letreiro2'>Certificados</h1>
+        </div>
+        
+        <div className = 'blocaoVermelho'
+             style = {{userSelect: 'none',}}>
+
+          <img src={petlogo2}
+               style = {{marginTop: '-90px'}}/>
+               
+        </div>
+
+      </div>
+    )
+  }
 }
 
 export default App
