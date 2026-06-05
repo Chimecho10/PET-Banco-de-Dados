@@ -2,6 +2,7 @@
 #Execute com:
 #docker exec -it fastapi python teste.py 
 from repositories import UserRepository
-
+from models import UserCreate
+user = UserCreate(nome= "Cleiton",username="Cleiton",cpf="11122233344",senha="123456")
 repos = UserRepository
-repos.criar_user("Cleiton","1234","113234","cleiton")
+repos.cadastrar_user(user)

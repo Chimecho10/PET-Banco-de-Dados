@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import login_router
+from routers import login_router, users_router
 
 app = FastAPI()
 
@@ -17,6 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(login_router)
+app.include_router(users_router)
 
 @app.get("/")
 def start_servidor():

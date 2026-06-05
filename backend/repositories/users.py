@@ -1,9 +1,9 @@
 from core import ConnectionDB
-from models import UserSchema, UserModel, UpdateSchema
+from models import UserCreate, UserModel
 
 class UserRepository:
     @staticmethod
-    def cadastrar_user(user: UserSchema) -> None:
+    def cadastrar_user(user: UserCreate) -> None:
         queryStr = """
             INSERT INTO users (username, senha_hash, cpf, nome, ativo)
             VALUES(%s,%s,%s,%s, %s);
@@ -13,7 +13,7 @@ class UserRepository:
             cursor.execute(queryStr, values)
     
     @staticmethod
-    def cadastrar_user_semAtivo(user: UserSchema) -> None:
+    def cadastrar_user_semAtivo(user: UserCreate) -> None:
         queryStr = """
             INSERT INTO users (username, senha_hash, cpf, nome)
             VALUES(%s,%s,%s, %s);
@@ -72,13 +72,13 @@ class UserRepository:
         return user
     
     @staticmethod
-    def atualizar_user(user: UpdateSchema) -> None:
+    def atualizar_user(user: UserModel) -> None:
         queryStr = """
             UPDATE users
             SET username= %s, senha_hash= %s, cpf= %s, nome= %s
             WHERE id = %s;
         """
-        values = (user.username, user.senha, user.cpf, user.nome, user.id,)
+        values = (user.username, user.senha_hash, user.cpf, user.nome, user.id,)
         with ConnectionDB() as cursor:
             cursor.execute(queryStr, values)
             

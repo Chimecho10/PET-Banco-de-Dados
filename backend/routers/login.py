@@ -1,8 +1,9 @@
 from datetime import timedelta
 from fastapi import APIRouter, HTTPException
-from models import UserSchema, LoginSchema
+from models import UserCreate, LoginSchema
 from repositories import UserRepository
 from auth import autenticar_user, create_access_token, get_senha_hash
+
 router = APIRouter(
     tags = ["login"]
 )
@@ -28,7 +29,7 @@ def login_user(login: LoginSchema):
     }
 
 @router.post("/cadastro", status_code=201)
-def cadastro_user(user: UserSchema):
+def cadastro_user(user: UserCreate):
     user.senha = get_senha_hash(user.senha)
     UserRepository.cadastrar_user(user)
     return {"mensagem" : "Usuário cadastrado com sucesso!"}
