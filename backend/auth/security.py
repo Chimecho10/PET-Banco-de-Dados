@@ -73,11 +73,22 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
         token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
-    user = UserRepository.buscar_user_username(username=token_data.username)
+    user = None
+    if token_data.username:
+        user = UserRepository.buscar_user_username(username=token_data.username)
+
     if user is None:
         raise credentials_exception
     
     if not user.ativo:
         raise credentials_exception
 
+    return user
+
+def get_current_admin( user = Depends(get_current_user)):
+    if not user.adm:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso negado"
+        )
     return user

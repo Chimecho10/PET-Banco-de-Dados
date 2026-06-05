@@ -15,7 +15,9 @@ CREATE TABLE eventos(
     titulo VARCHAR(50) NOT NULL,
     texto VARCHAR(255) NOT NULL,
     data_inicio DATE NOT NULL,
-    data_fim DATE NOT NULL
+    data_fim DATE NOT NULL,
+
+    UNIQUE (titulo, data_inicio, data_fim)
 );
 
 CREATE TABLE certificados(
