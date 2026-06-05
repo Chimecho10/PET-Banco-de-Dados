@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from datetime import date
 
-class EventoBase(BaseModel):
+class EventosSchema(BaseModel):
     titulo: str
     texto: str
     data_inicio: date
