@@ -3,6 +3,18 @@ from models import UserCreate, UserModel
 
 class UserRepository:
     @staticmethod
+    def _to_user(resultado) -> UserModel:
+        return UserModel(
+            id=resultado[0],
+            username=resultado[1],
+            senha_hash=resultado[2],
+            cpf=resultado[3],
+            nome=resultado[4],
+            adm=resultado[5],
+            ativo=resultado[6]
+        )
+
+    @staticmethod
     def cadastrar_user(user: UserCreate) -> None:
         queryStr = """
             INSERT INTO users (username, senha_hash, cpf, nome, ativo)
@@ -33,22 +45,35 @@ class UserRepository:
             cursor.execute(queryStr,(username,))
             resultado = cursor.fetchone()
             if resultado:
-                user = UserModel(
-                    id= resultado[0],
-                    username= resultado[1],
-                    senha_hash= resultado[2],
-                    cpf= resultado[3],
-                    nome= resultado[4],
-                    adm= resultado[5],
-                    ativo= resultado[6]
-                )
+                user = UserRepository._to_user(resultado)
         return user
 
 
     @staticmethod
-    def definir_adm(username: str):
-        pass
-    
+    def definir_adm(userid: int) -> bool:
+        queryStr = """
+            UPDATE users
+            SET adm = TRUE
+            WHERE id = %s;
+        """
+        with ConnectionDB() as cursor:
+            cursor.execute(queryStr, (userid,))
+            return cursor.rowcount > 0
+        
+        return False
+
+    @staticmethod
+    def ativar_user(user: UserModel) -> None:
+        queryStr = """
+            UPDATE users
+            SET username = %s, senha_hash = %s, ativo = TRUE
+            WHERE id = %s;
+        """
+        values = (user.username, user.senha_hash, user.id,
+        )
+        with ConnectionDB() as cursor:
+            cursor.execute(queryStr, values)
+
     @staticmethod
     def buscar_user_userid(userid: int) -> UserModel | None:
         queryStr = """
@@ -60,15 +85,21 @@ class UserRepository:
             cursor.execute(queryStr,(userid,))
             resultado = cursor.fetchone()
             if resultado:
-                user = UserModel(
-                    id= resultado[0],
-                    username= resultado[1],
-                    senha_hash= resultado[2],
-                    cpf= resultado[3],
-                    nome= resultado[4],
-                    adm= resultado[5],
-                    ativo= resultado[6]
-                )
+                user = UserRepository._to_user(resultado)
+        return user
+    
+    @staticmethod
+    def buscar_user_cpf(user_cpf: str) -> UserModel | None:
+        queryStr = """
+            SELECT id, username, senha_hash, cpf, nome, adm, ativo FROM users
+            WHERE cpf = %s;
+        """
+        user = None 
+        with ConnectionDB() as cursor:
+            cursor.execute(queryStr,(user_cpf,))
+            resultado = cursor.fetchone()
+            if resultado:
+                user = UserRepository._to_user(resultado)
         return user
     
     @staticmethod
@@ -92,14 +123,15 @@ class UserRepository:
             cursor.execute(queryStr,(userid,))
             
     @staticmethod
-    def buscar_usernames():
+    def listar_users() -> list[UserModel]:
         queryStr = """
-            SELECT username FROM users;
+            SELECT id, username, senha_hash, cpf, nome, adm, ativo FROM users;
         """
-        users = None
+        users = list()
         with ConnectionDB() as cursor:
             cursor.execute(queryStr,)
-            resultado = cursor.fetchall()
-            if resultado:
-                users = resultado
+            resultados = cursor.fetchall()
+            for result in resultados:
+                user = UserRepository._to_user(result)
+                users.append(user)
         return users

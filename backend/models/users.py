@@ -13,7 +13,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     senha: str
 
-class PasswordSchema(UserBase):
+class PasswordSchema(BaseModel):
     senha: str
     confirmar_senha: str
 
