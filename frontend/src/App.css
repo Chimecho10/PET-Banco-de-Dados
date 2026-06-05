@@ -13,17 +13,43 @@
   src: url('./assets/fontes/Syphon-Bold.woff2') format('woff2');
 }
 
+.overFlowY::-webkit-scrollbar {
+  display: none;
+}
+
+.nomeFlex {
+  flex: 1;
+  font-family: 'Montserrat', serif;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.letreiro5 {
+  font-family: 'Montserrat', serif;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 40px;
+  color:#ffffff;
+  
+}
+
+.megablocored {
+  background-color: #cd5151;
+  width: 100%;
+  height: 100px;
+}
+
 .letreiro4 {
   font-family: 'Montserrat', serif;
   letter-spacing: 1px;
-  font-size: 30px;
+  font-size: 40px;
 }
 
 .campo3 {
   border: none;
   outline: none;
   font-size: 14px;
-  width: 160px;
+  width: 150px;
 }
 
 .linhavertical{
@@ -33,6 +59,26 @@
   margin-left: 10px;
   margin-right: 15px;
 }
+
+.campo4 {
+  text-align: center;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  width: 270px;
+}
+
+.procurando2 {
+  background-color: #ffffff;
+  border-style: solid;
+  border-color: #4e4e4e;
+  border-width: 1px;
+  height: 60px;
+  width: 400px;
+  border-radius: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;}
 
 .procurando {
   background-color: #ffffff;
