@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class CertificadoSchema(BaseModel):
+class CertificadosSchema(BaseModel):
     carga_horaria: int
     id_user: int
     id_evento: int
