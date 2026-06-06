@@ -9,6 +9,62 @@ import sair from '../assets/imagens/sair.png'
 export default function Aba_Participantes({voltarAbaLobby})
 {
 
+// VARIÁVEIS DE EDITAR PARTICIPANTE
+const [janelaEditar, setJanelaEditar] = useState(null);
+const [nome_edicao, setNome_edicao] = useState('');
+const [data_inicio_edicao, setData_inicio_edicao] = useState('');
+const [data_termino_edicao, setData_termino_edicao] = useState('');
+const [id_evento, setId_evento] = useState('');
+
+  const editartrue = (evento) =>
+   {//ID DO EVENTO QUE ESTÁ SENDO EDITADO
+    setId_evento(evento.id);
+
+    //INFORMAÇÕES DO PARTICIPANTE PARA EDITAR
+    setNome_edicao(evento.nome);
+    setData_inicio_edicao(evento.data_de_inicio)
+    setData_termino_edicao(evento.data_de_termino)
+    setJanelaEditar(true);}
+
+  const editarfalse = (e) =>
+    {e.preventDefault()
+     setJanelaEditar(false);}
+
+  const editarEvento = (e) =>
+    { e.preventDefault()
+      // INTEGRAR COM O BACKEND (EDIÇÃO DE CERTIFICADO)
+
+      setJanelaEditar(false);
+    }
+
+// DELETAR CERTIFICADO
+const [janelaDeletar, setJanelaDeletar] = useState(null);
+const [id_evento_deletando, setId_evento_deletando] = useState('');
+const [data_inicio_deletando, setData_inicio_deletando] = useState('');
+const [data_termino_deletando, setData_termino_deletando] = useState('');
+const [nome_deletando, setNome_deletando] = useState('');
+
+
+  const deletartrue = (evento) =>
+   {setId_evento_deletando(evento.id)
+    setNome_deletando(evento.nome)
+    setData_inicio_deletando(evento.data_de_inicio)
+    setData_termino_deletando(evento.data_de_termino)
+    setJanelaDeletar(true);}
+
+  const deletarfalse = (e) =>
+  {e.preventDefault()
+    setJanelaDeletar(false);}
+
+  const deletarEvento = (e) => {
+    e.preventDefault()
+
+    // INTEGRAR COM O BACKEND (DELETAR CERTIFICADO)
+
+
+    setJanelaDeletar(false);
+  }
+
 // VARIÁVEIS DE ADICIONAR EVENTO
 const [janelaAdicionar, setJanelaAdicionar] = useState(null);
 const [nome, setNome] = useState('');
@@ -196,7 +252,7 @@ return (
             <div className = 'nomeFlex'>{user.data_de_inicio}</div>
             <div className = 'nomeFlex'>{user.data_de_termino}</div>
             <div style={{flex: 1}}>
-              <button onClick = {apagarParticipante}
+              <button onClick = {() => deletartrue(user)}
                       style={{userSelect: 'none',
                               border: 'none',
                               cursor: 'pointer',
@@ -204,7 +260,7 @@ return (
                 <img src={excluir}/>
 
               </button>
-              <button onClick = {editarParticipante}
+              <button onClick = {() => editartrue(user)}
                       style={{userSelect: 'none',
                               marginLeft:'20px',
                               border: 'none',
@@ -225,7 +281,7 @@ return (
             <div className = 'nomeFlex'>{user.data_de_inicio}</div>
             <div className = 'nomeFlex'>{user.data_de_termino}</div>
             <div style={{flex: 1}}>
-              <button onClick = {apagarParticipante}
+              <button onClick = {() => deletartrue(user)}
                       style={{userSelect: 'none',
                               border: 'none',
                               cursor: 'pointer',
@@ -233,7 +289,7 @@ return (
                 <img src={excluir}/>
 
               </button>
-              <button onClick = {editarParticipante}
+              <button onClick = {() => editartrue(user)}
                       style={{userSelect: 'none',
                               marginLeft:'20px',
                               border: 'none',
@@ -300,6 +356,116 @@ return (
               Adicionar
             </button>
           </form>
+        </div>
+      </div>}
+
+    {janelaEditar &&
+      <div className='overlay'>
+        
+        <div className='trymodal'
+            style = {{display:'flex',
+                      flexDirection:'column',}}>
+
+          <button onClick={editarfalse}
+                  className = 'buttonvlt'>
+              <img style = {{width: '25px'}} src={sair}/>
+          </button>     
+
+          <h1 className = 'letreiro3'
+              style = {{userSelect:'none'}}
+              >EDITAR EVENTO
+          </h1>
+
+          <form onSubmit={editarEvento}
+                style = {{display:'flex',
+                          userSelect: 'none',
+                          flexDirection:'column',
+                          alignItems: 'center'}}>
+            <div className='retanguloamarelo'>
+                  <h1 className='letreiro6'>Nome:</h1>
+                  <input type = "text"
+                        value = {nome_edicao}
+                        onChange = {(nome_edicao) => setNome_edicao(nome_edicao.target.value)}
+                        className = 'campoadd'>
+                  </input>
+            </div>
+            <div className='retanguloamarelo'>
+                  <h1 className='letreiro6'>Início:</h1>
+                  <input type = "text"
+                         value = {data_inicio_edicao}
+                         onChange = {(data_inicio_edicao) => setData_inicio_edicao(data_inicio_edicao.target.value)}
+                         className = 'campoadd'>
+                  </input>
+            </div>
+            <div className='retanguloamarelo'>
+                  <h1 className='letreiro6'>Término:</h1>
+                  <input type = "text"
+                        value = {data_termino_edicao}
+                        onChange = {(data_termino_edicao) => setData_termino_edicao(data_termino_edicao.target.value)}
+                        className = 'campoadd'>
+                  </input>
+            </div>
+
+            <button className='buttonvlt'>
+            </button>
+
+            <button type = 'submit'
+                    className='buttonenviar'>
+              Editar
+            </button>
+          </form>
+        </div>
+      </div>
+    }
+
+    {janelaDeletar &&
+      <div className='overlay'>
+        
+        <div className='trymodal'
+            style = {{display:'flex',
+                      flexDirection:'column',}}>
+
+          <button onClick={deletarfalse}
+                  className = 'buttonvlt'>
+              <img style = {{width: '25px'}} src={sair}/>
+          </button>     
+
+          <h1 className = 'letreiro3'
+              style = {{userSelect:'none'}}
+              >DELETAR EVENTO
+          </h1>
+
+          <h1 className = 'letreiro3'
+              style = {{userSelect:'none',
+                        marginBottom:'0px',
+                        marginTop:'30px'}}
+              >Evento: {nome_deletando} 
+          </h1>
+
+          <h1 className = 'letreiro3'
+              style = {{userSelect:'none',
+                        marginBottom:'0px',
+                        marginTop:'0px'}}
+              >Início: {data_inicio_deletando}
+          </h1>
+
+          <h1 className = 'letreiro3'
+              style = {{userSelect:'none',
+                        marginBottom:'0px',
+                        marginTop:'0px'}}
+              >Término: {data_termino_deletando}
+          </h1>
+
+          <button className='buttonvlt'>
+          </button>
+
+          <button onClick={deletarEvento}
+                  className='buttonenviar'
+                  style = {{position: 'absolute',
+                            top: '75%',
+                            left: '38%',}}>
+              Deletar
+          </button>
         </div>
       </div>
     }
