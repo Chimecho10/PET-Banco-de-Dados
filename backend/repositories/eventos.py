@@ -25,7 +25,24 @@ class EventosRepository:
                 evento = EventosRepository._to_evento(result)
                 eventos.append(evento)
         return eventos
-
+    
+    @staticmethod
+    def buscar_eventos_user_id(id_user: int) -> list[EventoModel]:
+        queryStr = """
+            SELECT e.id, e.titulo, e.texto, e.data_inicio, e.data_fim FROM eventos e 
+            INNER JOIN certificados c 
+                ON c.id_evento = e.id 
+            WHERE c.id_user = %s
+        """
+        eventos = []
+        with ConnectionDB() as cursor:
+            cursor.execute(queryStr, (id_user,))
+            resultados = cursor.fetchall()
+            for result in resultados:
+                evento = EventosRepository._to_evento(result)
+                eventos.append(evento)
+        return eventos
+    
     @staticmethod
     def cadastrar_evento(evento: EventosSchema) -> None:
         queryStr = """

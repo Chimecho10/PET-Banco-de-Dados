@@ -4,7 +4,15 @@ class CertificadosSchema(BaseModel):
     carga_horaria: int
     id_user: int
     id_evento: int
-    
+
+class CertificadosResponse(CertificadosSchema):
+    id: int
+
+class CertificadosNomeTitulo(CertificadosResponse):
+    nome_user: str
+    titulo_evento: str
+
+
 class CertificadoModel:
     def __init__(self, id: int, carga_horaria: int, id_user: int, id_evento: int):
         self._id = id

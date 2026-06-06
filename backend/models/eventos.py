@@ -7,6 +7,9 @@ class EventosSchema(BaseModel):
     data_inicio: date
     data_fim: date
 
+class EventosResponse(EventosSchema):
+    id: int
+
 class EventoModel:
     def __init__(self, id: int, titulo: str, texto: str, data_inicio: date, data_fim: date):
         self._id = id

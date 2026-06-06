@@ -1,16 +1,45 @@
 from fastapi import APIRouter, Depends, HTTPException
-from auth import get_current_admin
+from auth import get_current_admin, get_current_user
 from repositories import EventosRepository
-from models import EventosSchema, EventoModel
+from models import EventosSchema, EventoModel, EventosResponse
 
 router = APIRouter(
     prefix="/eventos",
     tags=["eventos"]
 )
 
+@router.get("/me", status_code=200)
+def listar_eventos_user(user = Depends(get_current_user)):
+    eventos_list = EventosRepository.buscar_eventos_user_id(user.id)
+    eventos_response =  list()
+    for evento in eventos_list:
+        eventos_response.append(
+            EventosResponse(
+                id= evento.id,
+                titulo= evento.titulo,
+                texto= evento.texto,
+                data_inicio= evento.data_inicio,
+                data_fim= evento.data_fim
+            )
+        )
+    return eventos_response
+
+
 @router.get("/", status_code=200)
 def listar_eventos(user_admin = Depends(get_current_admin)):
-    return EventosRepository.listar_eventos()
+    eventos_list = EventosRepository.listar_eventos()
+    eventos_response =  list()
+    for evento in eventos_list:
+        eventos_response.append(
+            EventosResponse(
+                id= evento.id,
+                titulo= evento.titulo,
+                texto= evento.texto,
+                data_inicio= evento.data_inicio,
+                data_fim= evento.data_fim
+            )
+        )
+    return eventos_response
 
 @router.get("/{id}", status_code=200)
 def get_evento(id: int, user_admin= Depends(get_current_admin)):
@@ -20,7 +49,13 @@ def get_evento(id: int, user_admin= Depends(get_current_admin)):
             status_code=404,
             detail= "Evento não encontrado"
         )
-    return evento
+    return EventosResponse(
+        id= evento.id,
+        titulo= evento.titulo,
+        texto= evento.texto,
+        data_inicio= evento.data_inicio,
+        data_fim= evento.data_fim
+    )
 
 @router.post("/", status_code=201)
 def create_evento(evento: EventosSchema, user_admin = Depends(get_current_admin)):
