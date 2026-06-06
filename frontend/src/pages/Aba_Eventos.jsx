@@ -1,75 +1,308 @@
 import React, { useState } from 'react'
-import lupa from '../assets/imagens/lupa.png'
-import adicionar from '../assets/imagens/adicionar.png'
 
-export default function Aba_Eventos({procurarEvento,
-                                     nomeDoEvento,
-                                     setNomeDoEvento,
-                                     adicionarEvento,})
+import lupa from '../assets/imagens/lupa.png'
+import add from '../assets/imagens/adicionar.png'
+import editar from '../assets/imagens/editarparticipante.png'
+import excluir from '../assets/imagens/excluirparticipante.png'
+import sair from '../assets/imagens/sair.png'
+
+export default function Aba_Participantes({voltarAbaLobby})
 {
+
+// VARIÁVEIS DE ADICIONAR EVENTO
+const [janelaAdicionar, setJanelaAdicionar] = useState(null);
+const [nome, setNome] = useState('');
+const [datainicio, setDatainicio] = useState('');
+const [datatermino, setDatatermino] = useState('');
+
+// VARIÁVEIS DE BUSCA
+const [procurando, setProcurando] = useState(false);
+const [buscanalista, setBuscaNaLista] = useState(null);
+
+// LISTA DE TESTE É A VARIÁVEL RECEBE TODOS OS EVENTOS QUE ESTÃO NO BANCO DE DADOS
+// NOME É SUB-VARIÁVEIS USADA PARA PESQUISAR O EVENTO
+const listaDeTeste = [
+  { id: 1, nome: "Evento 1", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
+  { id: 2, nome: "Evento 2", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
+  { id: 3, nome: "Evento 3", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
+  { id: 4, nome: "Evento 4", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
+  { id: 5, nome: "Evento 5", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
+  { id: 6, nome: "Evento 6", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
+  { id: 7, nome: "Evento 7", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
+];
+
+//CONECTAR COM BACKEND
+const addpartrue = () => {
+  setJanelaAdicionar(true);
+}
+
+//CONECTAR COM BACKEND
+const desaddpartrue = () => {
+  setNome('');
+  setDatainicio('');
+  setDatatermino('');
+  setJanelaAdicionar(false);
+}
+
+const adicionarparticipante = (e) => {
+  e.preventDefault()
+  if (nome === '' || datainicio === '' || datatermino === '')
+    {alert("Espaço em Branco!")}
+
+  //CONECTAR COM BACKEND A PARTIR DAQUI
+  else {
+    const resposta = true;
+
+    //BACKEND AQUI
+
+
+    if (resposta)
+      {alert("Evento Adicionado!");}
+    else 
+      {alert("Erro Interno");}
+  }
+}
+
+const procurarEvento = (e) => {
+  e.preventDefault();
+  if (nome !== '')
+    {setProcurando(true);
+     const busca = listaDeTeste.filter((evento) => {
+        return evento.nome.toLowerCase().includes(nome.toLowerCase())})
+     setBuscaNaLista(busca);
+     if (busca.length === 0)
+      {setProcurando(false)}}
+   else {
+     setProcurando(false)}
+}
+
+const deletar = () => {
+    setProcurando(false);
+    setNome('');
+}
+
+const apagarParticipante = () => {
+
+}
+
+const editarParticipante = (e) => {
+  e.preventDefault();
+}
+
 return (
-      <div>
+<div>
+    <div className='megablocoblue'
+         style = {{userSelect: 'none',
+                   display: 'flex',
+                   justifyContent: 'center',
+                   alignItems: 'center',}}>
+
         <div style = {{display:'flex',
-                        flexDirection:'row',
-                        justifyContent:'center'}}>
-          <div style = {{marginTop: '80px',
-                          marginRight: '150px',
-                          marginLeft: '200px',
-                          userSelect: 'none',
-            }}>
-            <h1 className = 'letreiro3'
-                style = {{marginBottom: '0px'}}        
-                >EVENTOS</h1>
-            <hr className = 'linhavermelha'
-                style = {{marginTop: '0px'}} />
-          </div>
-          <div className = 'procurando'
-                style = {{userSelect: 'none',
-                          marginLeft: '20px',
-                          marginTop: '105px',}}>
-              <form submit={procurarEvento}
-                    style = {{display: 'flex',
-                              flexDirection: 'row',
-                              alignItems: 'center'}}>
-                <input type = "text"
-                        value = {nomeDoEvento}
-                        placeholder='Procure Um Evento...'
-                        onChange = {(nomeDoEvento) => setNomeDoEvento(nomeDoEvento.target.value)}
-                        className = 'campo3'></input>
-                <div className = 'linhavertical'></div>
-                <button type = 'submit'
-                        style = {{border: 'none',
-                                  color: '#00000000',
-                                  cursor: 'pointer',
-                                  backgroundColor: '#00000000',}}>
-                  <img src={lupa} style = {{width: '25px',
-                                            marginLeft: '-5px'}}/>
-                </button>
-              </form>
-          </div>
-          <div>
-            <button  onClick = {adicionarEvento}
-                      style = {{marginTop: '109px',
-                                marginLeft: '20px',
-                                userSelect: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                backgroundColor: '#00000000',}}>
-              <img src={adicionar}/> 
+                       alignItems: 'center',
+                       flexDirection:'row',}}>
+
+            <button className='buttonvlt2'
+                    style = {{marginRight: '100px'}}
+                    onClick = {voltarAbaLobby}>
+                  
+                  <div className='buttonvoltando'>
+                    Voltar
+                  </div>
 
             </button>
-          </div>
+
+            <h1 className = 'letreiro5'
+                style = {{margin: '0 auto'}}>
+                EVENTOS
+            </h1>
+
+            <div className = 'procurando2'
+                    style = {{userSelect: 'none',
+                              marginLeft:'200px'}}>
+
+                    <form onSubmit = {procurarEvento}
+                          style = {{display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center'}}>
+
+                        <button type = 'submit'
+                                style = {{border: 'none',
+                                          color: '#00000000',
+                                          cursor: 'pointer',
+                                          backgroundColor: '#00000000',}}>
+
+                            <img src={lupa}
+                                    style={{marginRight:'10px',
+                                            width:'38px',}}/>
+                        </button>
+
+                        <input type = "text"
+                               value = {nome}
+                               onChange = {(nome) => setNome(nome.target.value)}
+                               placeholder='Procure por Nome do Evento'
+                               className = 'campo4'></input>
+
+                        <button onClick = {deletar}
+                                style = {{border: 'none',
+                                          cursor: 'pointer',
+                                          backgroundColor: '#00000000',}}>
+
+                               <h1 style = {{marginLeft:'10px',
+                                             fontFamily:'inherit',
+                                             fontSize:'20px'}}>X</h1>
+                        </button>
+
+                    </form>
+            </div>
+
+            <button onClick = {addpartrue}
+                    style = {{marginLeft:'20px',
+                              border: 'none',
+                              cursor: 'pointer',
+                              backgroundColor: '#00000000',}}>
+                    <img src={add}
+                         style = {{width:'50px'}}/>
+            </button>
+
         </div>
-        <div style = {{display: 'flex',
+    </div>
+    
+    <div style={{maxWidth: '1600px',
+                 margin: '0 auto',}}>
+        <div style = {{userSelect: 'none',
+                       marginTop:'50px',
+                       display: 'flex',
                        flexDirection: 'row',
-                       marginTop: '50px',
-                       gap: '90px',
                        justifyContent: 'center'}}>
-          <div className='letreiro4'>EVENTO</div>
-          <div className='letreiro4'>DATA DE INÍCIO</div>
-          <div className='letreiro4'>DATA DE TÉRMINO</div>
-          <div className='letreiro4'>AÇÕES</div>
+            <div className='letreiroX' style = {{flex: 1}}>NOME</div>
+            <div className='letreiroX' style = {{flex: 1}}>DATA DE INÍCIO</div>
+            <div className='letreiroX' style = {{flex: 1}}>DATA DE TÉRMINO</div>
+            <div className='letreiroX' style = {{flex: 1}}>AÇÕES</div>
+        </div>
+    </div>
+
+    <div style = {{maxHeight: 'calc(90vh - 150px)',
+                   overflowY: 'auto',
+                   maxWidth: '1600px',
+                   margin: '0 auto',}}>
+
+        {!procurando && listaDeTeste.map((user) => (
+          <div key={user.id} style={{display: 'flex', 
+                                     alignItems: 'center',
+                                     padding: '10px 0px',
+                                     borderBottom: '3px solid #ccc'}}>
+            
+            <div className = 'nomeFlex'>{user.nome}</div>
+            <div className = 'nomeFlex'>{user.data_de_inicio}</div>
+            <div className = 'nomeFlex'>{user.data_de_termino}</div>
+            <div style={{flex: 1}}>
+              <button onClick = {apagarParticipante}
+                      style={{userSelect: 'none',
+                              border: 'none',
+                              cursor: 'pointer',
+                              backgroundColor: '#00000000',}}>
+                <img src={excluir}/>
+
+              </button>
+              <button onClick = {editarParticipante}
+                      style={{userSelect: 'none',
+                              marginLeft:'20px',
+                              border: 'none',
+                              cursor: 'pointer',
+                              backgroundColor: '#00000000',}}>
+                <img src={editar}/>
+              </button>
+            </div>
+          </div>))}
+
+        {procurando && buscanalista.map((user) => (
+          <div key={user.id} style={{display: 'flex', 
+                                     alignItems: 'center',
+                                     padding: '10px 0px',
+                                     borderBottom: '3px solid #ccc'}}>
+            
+            <div className = 'nomeFlex'>{user.nome}</div>
+            <div className = 'nomeFlex'>{user.data_de_inicio}</div>
+            <div className = 'nomeFlex'>{user.data_de_termino}</div>
+            <div style={{flex: 1}}>
+              <button onClick = {apagarParticipante}
+                      style={{userSelect: 'none',
+                              border: 'none',
+                              cursor: 'pointer',
+                              backgroundColor: '#00000000',}}>
+                <img src={excluir}/>
+
+              </button>
+              <button onClick = {editarParticipante}
+                      style={{userSelect: 'none',
+                              marginLeft:'20px',
+                              border: 'none',
+                              cursor: 'pointer',
+                              backgroundColor: '#00000000',}}>
+                <img src={editar}/>
+              </button>
+            </div>
+          </div>))}
+    </div>
+    
+    {janelaAdicionar &&
+      <div className='overlay'>
+        
+        <div className='trymodal'
+            style = {{display:'flex',
+                      flexDirection:'column',}}>
+
+          <button onClick={desaddpartrue}
+                  className = 'buttonvlt'>
+              <img style = {{width: '25px'}} src={sair}/>
+          </button>     
+
+          <h1 className = 'letreiro3'
+              style = {{userSelect:'none'}}
+              >ADICIONAR EVENTO
+          </h1>
+
+          <form onSubmit={adicionarparticipante}
+                style = {{display:'flex',
+                          userSelect: 'none',
+                          flexDirection:'column',
+                          alignItems: 'center'}}>
+            <div className='retanguloamarelo'>
+                  <h1 className='letreiro6'>Nome:</h1>
+                  <input type = "text"
+                        value = {nome}
+                        onChange = {(nome) => setNome(nome.target.value)}
+                        className = 'campoadd'>
+                  </input>
+            </div>
+            <div className='retanguloamarelo'>
+                  <h1 className='letreiro6'>Início:</h1>
+                  <input type = "text"
+                         value = {datainicio}
+                         onChange = {(datainicio) => setDatainicio(datainicio.target.value)}
+                         className = 'campoadd'>
+                  </input>
+            </div>
+            <div className='retanguloamarelo'>
+                  <h1 className='letreiro6'>Término:</h1>
+                  <input type = "text"
+                        value = {datatermino}
+                        onChange = {(datatermino) => setDatatermino(datatermino.target.value)}
+                        className = 'campoadd'>
+                  </input>
+            </div>
+
+            <button className='buttonvlt'>
+            </button>
+
+            <button type = 'submit'
+                    className='buttonenviar'>
+              Adicionar
+            </button>
+          </form>
         </div>
       </div>
-    )
+    }
+</div>
+ )
 }

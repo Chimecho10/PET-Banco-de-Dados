@@ -7,7 +7,7 @@ import Aba_Inicial from './pages/Aba_Inicial.jsx'
 import Aba_Cadastro from './pages/Aba_Cadastro.jsx'
 import Aba_Lobby from './pages/Aba_Lobby.jsx'
 import Aba_Participantes from './pages/Aba_Participantes.jsx'
-import Aba_adicionarParticipantes from './pages/Aba_adicionarParticipantes.jsx'
+import Aba_Certificados from './pages/Aba_Certificados.jsx'
 
 //Imagens
 import petlogo from './assets/imagens/petlogo.png'
@@ -22,7 +22,6 @@ function App() {
   const [abaParticipantes, setAbaParticipantes] = useState(false);
   const [abaCertificados, setAbaCertificados] = useState(false);
   const [abaAdicionarEvento, setAbaAdicionarEvento] = useState(false);
-  const [adicionarParticipante, setAdicionarParticipante] = useState(false);
 
   // Variáveis de Login
   const [usuario, setUsuario] = useState('');
@@ -144,6 +143,13 @@ function App() {
     evento.preventDefault()
   }
 
+  const voltarAbaLobby = () => {
+    setAbaCertificados(false);
+    setAbaEventos(false);
+    setAbaParticipantes(false);
+    setAbaLobby(true);
+  }
+
   if (abaInicial){
     return <Aba_Inicial ir={ir} 
                         sigin={sigin}
@@ -177,18 +183,15 @@ function App() {
   }
 
   if (abaEventos){
-    return <Aba_Eventos procurarEvento={procurarEvento}
-                        nomeDoEvento={nomeDoEvento}
-                        setNomeDoEvento={setNomeDoEvento}
-                        adicionarEvento={adicionarEvento}/>
+    return <Aba_Eventos voltarAbaLobby={voltarAbaLobby}/>
   }
 
   if (abaParticipantes){
-    return <Aba_Participantes addpartrue={addpartrue}/>
+    return <Aba_Participantes voltarAbaLobby={voltarAbaLobby}/>
   }
 
-  if (adicionarParticipante){
-    return <Aba_adicionarParticipantes/>
+  if (abaCertificados){
+    return <Aba_Certificados voltarAbaLobby={voltarAbaLobby}/>
   }
 }
 
