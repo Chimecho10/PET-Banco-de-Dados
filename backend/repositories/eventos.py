@@ -3,6 +3,30 @@ from models import EventosSchema, EventoModel
 
 class EventosRepository:
     @staticmethod
+    def _to_evento(resultado) -> EventoModel:
+        return EventoModel(
+            id= resultado[0],
+            titulo= resultado[1],
+            texto= resultado[2],
+            data_inicio= resultado[3],
+            data_fim= resultado[4]
+        )
+
+    @staticmethod
+    def listar_eventos() -> list[EventoModel]:
+        queryStr = """
+            SELECT id, titulo, texto, data_inicio, data_fim FROM eventos;
+        """
+        eventos = list()
+        with ConnectionDB() as cursor:
+            cursor.execute(queryStr)
+            resultados = cursor.fetchall()
+            for result in resultados:
+                evento = EventosRepository._to_evento(result)
+                eventos.append(evento)
+        return eventos
+
+    @staticmethod
     def cadastrar_evento(evento: EventosSchema) -> None:
         queryStr = """
             INSERT INTO eventos (titulo, texto, data_inicio, data_fim)
