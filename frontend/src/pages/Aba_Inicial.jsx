@@ -10,10 +10,6 @@ export default function Aba_Inicial({ir,
                                      senha}){
 return(
 <div>
-    <button onClick={ir}
-            style = {{position: 'absolute',
-                    justifyContent:'center'}}>
-    Ir</button>
     <div style = {{display:'flex',
                     alignItems: 'center',
                     justifyContent:'center',
@@ -40,7 +36,7 @@ return(
 
         <div className= 'letreiro'>Login</div>
 
-        <form onSubmit = {login}>
+        <form onSubmit = {ir}>
             <div className= 'discoInput'
                 style = {{marginTop: '7px'}}>
 
@@ -65,6 +61,10 @@ return(
                     value = {senha}
                     onChange = {(senha) => setSenha(senha.target.value)}
                     className = 'campo2'>   
+            </input>
+            <input type = "submit"
+                    value= "Enviar">
+                    
             </input>
 
             </div>
