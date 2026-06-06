@@ -13,6 +13,10 @@ import Aba_Certificados from './pages/Aba_Certificados.jsx'
 import petlogo from './assets/imagens/petlogo.png'
 import petlogo2 from './assets/imagens/petlogo2.png'
 
+//Consumir API
+import { enviarCadastro } from './services/login.js'
+import { enviarLogin } from './services/login.js'
+
 function App() {
   // Abas
   const [abaInicial, setAbaInicial] = useState(true);
@@ -91,48 +95,17 @@ function App() {
     setAbaLobby(true);
   }
 
-  const login = (evento) => { // Conectar com o Banco de Dados / Backend
-    evento.preventDefault();
+  const login = (evento) => { 
+    const campos = { usuario, senha};
+    const funcoes = { setUsuario, setSenha, setAbaInicial, setAbaLobby };
+    enviarLogin(evento, campos, funcoes);
   }
 
-  const cadastro = async (evento) => {
-    evento.preventDefault()
-    if (usuarioCadastro === '' || senha1 === '' || senha2 === '' || cpf === '' || nome === '')
-       {alert("Espaços em branco");
-        return;}
-    else if (cpf.length !== 11)
-       {alert("CPF Inválido");
-        return;}
-    else if (senha1 !== senha2) 
-       {setSenha1('');
-        setSenha2('');
-        alert("Senhas não compatíveis");
-        return;}
-        
-    const dados =
-     {username: usuarioCadastro,
-      senha: senha1,
-      cpf: cpf,
-      nome: nome,}
-    
-    try{
-      const resp = await fetch('http://localhost:8000/cadastro', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(dados)});
-
-      if (resp.ok)
-       {alert("ok!")
-        setUserLogado(usuarioCadastro);
-        setUserCPF(cpf);
-        setAbaSigin(false);
-        setAbaLobby(true);}}
-
-    catch{
-      alert("Erro ao Cadastrar");
-    }
-
-  }
+  const cadastro = (evento) => {
+    const campos = { usuarioCadastro, senha1, senha2, cpf, nome };
+    const funcoes = { setUsuarioCadastro, setSenha1, setSenha2, setCpf, setNome, setAbaSigin, setAbaInicial };
+    enviarCadastro(evento, campos, funcoes);
+  };
 
   const addpartrue = () => {
     setAbaParticipantes(false);
@@ -151,7 +124,7 @@ function App() {
   }
 
   if (abaInicial){
-    return <Aba_Inicial ir={ir} 
+    return <Aba_Inicial ir={login} 
                         sigin={sigin}
                         usuario={usuario}
                         setUsuario={setUsuario}
