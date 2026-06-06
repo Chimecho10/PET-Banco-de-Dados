@@ -8,10 +8,10 @@ import Aba_Cadastro from './pages/Aba_Cadastro.jsx'
 import Aba_Lobby from './pages/Aba_Lobby.jsx'
 import Aba_Participantes from './pages/Aba_Participantes.jsx'
 import Aba_Certificados from './pages/Aba_Certificados.jsx'
+import Aba_MeusCertificados from './pages/Aba_MeusCertificados.jsx'
 
 //Imagens
 import petlogo from './assets/imagens/petlogo.png'
-import petlogo2 from './assets/imagens/petlogo2.png'
 
 function App() {
   // Abas
@@ -22,6 +22,7 @@ function App() {
   const [abaParticipantes, setAbaParticipantes] = useState(false);
   const [abaCertificados, setAbaCertificados] = useState(false);
   const [abaAdicionarEvento, setAbaAdicionarEvento] = useState(false);
+  const [abaMeuscertificados, setAbaMeuscertificados] = useState(false);
 
   // Variáveis de Login
   const [usuario, setUsuario] = useState('');
@@ -49,9 +50,9 @@ function App() {
       document.documentElement.removeAttribute('cor');}
   }, [abaInicial])
 
-  const adicionarEvento = () => {
-    setAbaEventos(false);
-    setAbaAdicionarEvento(true);
+  const meuscertificados = () => {
+    setAbaMeuscertificados(true);
+    setAbaLobby(false);
   }
 
   const eventos = () => {
@@ -75,8 +76,9 @@ function App() {
     setUsuarioCadastro('');
     setSenha1('');
     setSenha2('');
-    setAbaInicial(true);
     setAbaSigin(false);
+    setAbaLobby(false);
+    setAbaInicial(true);
   }
 
   const sigin = () => {
@@ -134,21 +136,19 @@ function App() {
 
   }
 
-  const addpartrue = () => {
-    setAbaParticipantes(false);
-    setAdicionarParticipante(true);
-  }
-
-  const procurarEvento = (evento) => {
-    evento.preventDefault()
-  }
-
   const voltarAbaLobby = () => {
+    setAbaMeuscertificados(false);
     setAbaCertificados(false);
     setAbaEventos(false);
     setAbaParticipantes(false);
     setAbaLobby(true);
   }
+
+  const adminfalse = () => 
+    {setAdmin(false);}
+
+  const admintrue = () => 
+    {setAdmin(true);}
 
   if (abaInicial){
     return <Aba_Inicial ir={ir} 
@@ -177,9 +177,11 @@ function App() {
 
   if (abaLobby){
     return <Aba_Lobby eventos={eventos}
+                      admin={admin}
+                      voltarAbaInicial={voltarAbaInicial}
+                      meuscertificados={meuscertificados}
                       participantes={participantes}
-                      certificados={certificados}
-                      petlogo2={petlogo2}/>
+                      certificados={certificados}/>
   }
 
   if (abaEventos){
@@ -192,6 +194,10 @@ function App() {
 
   if (abaCertificados){
     return <Aba_Certificados voltarAbaLobby={voltarAbaLobby}/>
+  }
+
+  if (abaMeuscertificados){
+    return <Aba_MeusCertificados voltarAbaLobby={voltarAbaLobby}/>
   }
 }
 
