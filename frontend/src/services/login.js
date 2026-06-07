@@ -78,7 +78,6 @@ export const enviarLogin = async (evento, campos, funcoes) =>{
 
         // 2. Salva o access_token no localStorage do navegador
         localStorage.setItem('token', dadosResposta.access_token);
-        console.log(dadosResposta)
         alert("Login realizado com sucesso.");
         if(dadosResposta.admin == 1) setAdmin(true);
         else setAdmin(false);

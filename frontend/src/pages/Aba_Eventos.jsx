@@ -6,7 +6,7 @@ import editar from '../assets/imagens/editarparticipante.png'
 import excluir from '../assets/imagens/excluirparticipante.png'
 import sair from '../assets/imagens/sair.png'
 
-import { carregarEventos } from '../services/users'
+import { carregarEventosAPI, adicionarEventosAPI, editarEventosAPI, deletarEventosAPI } from '../services/eventos'
 
 export default function Aba_Participantes({voltarAbaLobby})
 {
@@ -14,6 +14,7 @@ export default function Aba_Participantes({voltarAbaLobby})
 // VARIÁVEIS DE EDITAR EVENTO
 const [janelaEditar, setJanelaEditar] = useState(null);
 const [nome_edicao, setNome_edicao] = useState('');
+const [texto_edicao, setTexto_edicao] = useState('');
 const [data_inicio_edicao, setData_inicio_edicao] = useState('');
 const [data_termino_edicao, setData_termino_edicao] = useState('');
 const [id_evento, setId_evento] = useState('');
@@ -32,9 +33,17 @@ const [id_evento, setId_evento] = useState('');
     {e.preventDefault()
      setJanelaEditar(false);}
 
-  const editarEvento = (e) =>
-    { e.preventDefault()
-      // INTEGRAR COM O BACKEND (EDIÇÃO DE CERTIFICADO)
+  const editarEvento = async(e) =>
+    { e.preventDefault();
+      const campos = {nome_edicao, texto_edicao, data_inicio_edicao, data_termino_edicao, id_evento};
+      const funcoes = {setNome_edicao, setTexto_edicao, setData_inicio_edicao, setData_termino_edicao, setId_evento};
+
+      try{
+        await editarEventosAPI(campos, funcoes);
+        carregarEventosAPI({setListaDeTeste});
+      }catch(error){
+        console.error(error);
+      }
 
       setJanelaEditar(false);
     }
@@ -49,19 +58,23 @@ const [nome_deletando, setNome_deletando] = useState('');
 
   const deletartrue = (evento) =>
    {setId_evento_deletando(evento.id)
-    setNome_deletando(evento.nome)
-    setData_inicio_deletando(evento.data_de_inicio)
-    setData_termino_deletando(evento.data_de_termino)
+    setNome_deletando(evento.titulo)
+    setData_inicio_deletando(evento.data_inicio)
+    setData_termino_deletando(evento.data_fim)
     setJanelaDeletar(true);}
 
   const deletarfalse = (e) =>
   {e.preventDefault()
     setJanelaDeletar(false);}
 
-  const deletarEvento = (e) => {
-    e.preventDefault()
+  const deletarEvento = async (e) => {
+    try{
+      await deletarEventosAPI(id_evento_deletando);
+      carregarEventosAPI({setListaDeTeste});
 
-    // INTEGRAR COM O BACKEND (DELETAR CERTIFICADO)
+    }catch(error){
+      console.error(error);
+    }
 
 
     setJanelaDeletar(false);
@@ -70,12 +83,13 @@ const [nome_deletando, setNome_deletando] = useState('');
 // VARIÁVEIS DE ADICIONAR EVENTO
 const [janelaAdicionar, setJanelaAdicionar] = useState(null);
 const [nome, setNome] = useState('');
+const [texto, setTexto] = useState('');
 const [datainicio, setDatainicio] = useState('');
 const [datatermino, setDatatermino] = useState('');
 
 // VARIÁVEIS DE BUSCA
 const [procurando, setProcurando] = useState(false);
-const [buscanalista, setBuscaNaLista] = useState(null);
+const [buscanalista, setBuscaNaLista] = useState([]);;
 
 // LISTA DE TESTE É A VARIÁVEL RECEBE TODOS OS EVENTOS QUE ESTÃO NO BANCO DE DADOS
 // NOME É SUB-VARIÁVEIS USADA PARA PESQUISAR O EVENTO
@@ -83,7 +97,7 @@ const [listaDeTeste, setListaDeTeste] = useState([]);
 
 // Este Hook executa a função carregarEventos uma vez, assim que a tela abre.
 useEffect(() => {
-    carregarEventos({setListaDeTeste});
+    carregarEventosAPI({setListaDeTeste});
 }, []);
 
 //CONECTAR COM BACKEND
@@ -99,37 +113,41 @@ const desaddpartrue = () => {
   setJanelaAdicionar(false);
 }
 
-const adicionarparticipante = (e) => {
+const adicionarparticipante = async (e) => {
+
   e.preventDefault()
-  if (nome === '' || datainicio === '' || datatermino === '')
+  if (nome === '' || texto === '' || datainicio === '' || datatermino === '')
     {alert("Espaço em Branco!")}
 
-  //CONECTAR COM BACKEND A PARTIR DAQUI
   else {
-    const resposta = true;
+    try{
+      const funcoes = {setNome, setTexto, setDatainicio, setDatatermino}
+      const campos = {nome, texto, datainicio, datatermino}
 
-    //BACKEND AQUI
+      await adicionarEventosAPI(campos, funcoes);
+      carregarEventosAPI({setListaDeTeste});
 
 
-    if (resposta)
-      {alert("Evento Adicionado!");}
-    else 
-      {alert("Erro Interno");}
+    }catch(error){
+      console.log(error);
+    }
+
   }
 }
 
 const procurarEvento = (e) => {
-  e.preventDefault();
-  if (nome !== '')
-    {setProcurando(true);
-     const busca = listaDeTeste.filter((evento) => {
-        return evento.nome.toLowerCase().includes(nome.toLowerCase())})
-     setBuscaNaLista(busca);
-     if (busca.length === 0)
-      {setProcurando(false)}}
-   else {
-     setProcurando(false)}
-}
+    e.preventDefault();
+    if (nome.trim() !== '') {
+      setProcurando(true);
+      const busca = listaDeTeste.filter((evento) => {
+        const tituloEvento = (evento.titulo || evento.nome || '').toLowerCase();
+        return tituloEvento.includes(nome.toLowerCase());
+      });
+      setBuscaNaLista(busca);
+    } else {
+      setProcurando(false);
+    }
+  }
 
 const deletar = () => {
     setProcurando(false);
@@ -143,6 +161,17 @@ const apagarParticipante = () => {
 const editarParticipante = (e) => {
   e.preventDefault();
 }
+
+const formatarData = (dataISO) => {
+  if (!dataISO) return '';
+  const apenasData = dataISO.split('T')[0];
+  const partes = apenasData.split('-'); 
+  
+  if (partes.length !== 3) return dataISO; 
+
+  return `${partes[2]}/${partes[1]}/${partes[0]}`;
+};
+
 
 return (
 <div>
@@ -250,10 +279,10 @@ return (
             
             <div className = 'nomeFlex'>{evento.titulo}</div>
             <div className = 'nomeFlex'>{evento.texto}</div>
-            <div className = 'nomeFlex'>{evento.data_inicio}</div>
-            <div className = 'nomeFlex'>{evento.data_fim}</div>
+            <div className = 'nomeFlex'>{formatarData(evento.data_inicio)}</div>
+            <div className = 'nomeFlex'>{formatarData(evento.data_fim)}</div>
             <div style={{flex: 1}}>
-              <button onClick = {() => deletartrue(user)}
+              <button onClick = {() => deletartrue(evento)}
                       style={{userSelect: 'none',
                               border: 'none',
                               cursor: 'pointer',
@@ -261,7 +290,7 @@ return (
                 <img src={excluir}/>
 
               </button>
-              <button onClick = {() => editartrue(user)}
+              <button onClick = {() => editartrue(evento)}
                       style={{userSelect: 'none',
                               marginLeft:'20px',
                               border: 'none',
@@ -272,17 +301,18 @@ return (
             </div>
           </div>))}
 
-        {procurando && buscanalista.map((user) => (
-          <div key={user.id} style={{display: 'flex', 
+        {procurando && buscanalista.map((evento) => (
+          <div key={evento.id} style={{display: 'flex', 
                                      alignItems: 'center',
                                      padding: '10px 0px',
                                      borderBottom: '3px solid #ccc'}}>
             
-            <div className = 'nomeFlex'>{user.nome}</div>
-            <div className = 'nomeFlex'>{user.data_de_inicio}</div>
-            <div className = 'nomeFlex'>{user.data_de_termino}</div>
+            <div className = 'nomeFlex'>{evento.titulo}</div>
+            <div className = 'nomeFlex'>{evento.texto}</div>
+            <div className = 'nomeFlex'>{evento.data_inicio}</div>
+            <div className = 'nomeFlex'>{evento.data_fim}</div>
             <div style={{flex: 1}}>
-              <button onClick = {() => deletartrue(user)}
+              <button onClick = {() => deletartrue(evento)}
                       style={{userSelect: 'none',
                               border: 'none',
                               cursor: 'pointer',
@@ -290,7 +320,7 @@ return (
                 <img src={excluir}/>
 
               </button>
-              <button onClick = {() => editartrue(user)}
+              <button onClick = {() => editartrue(evento)}
                       style={{userSelect: 'none',
                               marginLeft:'20px',
                               border: 'none',
@@ -332,17 +362,25 @@ return (
                         className = 'campoadd'>
                   </input>
             </div>
+              <div className='retanguloamarelo'>
+                <h1 className='letreiro6'>Descrição:</h1>
+                <input type = "text"
+                      value = {texto}
+                      onChange = {(texto) => setTexto(texto.target.value)}
+                      className = 'campoadd'>
+                </input>
+            </div>
             <div className='retanguloamarelo'>
                   <h1 className='letreiro6'>Início:</h1>
-                  <input type = "text"
+                  <input type = "date"
                          value = {datainicio}
-                         onChange = {(datainicio) => setDatainicio(datainicio.target.value)}
+                         onChange = {(datainicio) => setDatainicio(datainicio.target.value )}
                          className = 'campoadd'>
                   </input>
             </div>
             <div className='retanguloamarelo'>
                   <h1 className='letreiro6'>Término:</h1>
-                  <input type = "text"
+                  <input type = "date"
                         value = {datatermino}
                         onChange = {(datatermino) => setDatatermino(datatermino.target.value)}
                         className = 'campoadd'>
@@ -391,8 +429,16 @@ return (
                   </input>
             </div>
             <div className='retanguloamarelo'>
-                  <h1 className='letreiro6'>Início:</h1>
+                  <h1 className='letreiro6'>Texto:</h1>
                   <input type = "text"
+                         value = {texto_edicao}
+                         onChange = {(texto_edicao) => setTexto_edicao(texto_edicao.target.value)}
+                         className = 'campoadd'>
+                  </input>
+            </div>
+            <div className='retanguloamarelo'>
+                  <h1 className='letreiro6'>Início:</h1>
+                  <input type = "date"
                          value = {data_inicio_edicao}
                          onChange = {(data_inicio_edicao) => setData_inicio_edicao(data_inicio_edicao.target.value)}
                          className = 'campoadd'>
@@ -400,7 +446,7 @@ return (
             </div>
             <div className='retanguloamarelo'>
                   <h1 className='letreiro6'>Término:</h1>
-                  <input type = "text"
+                  <input type = "DATE"
                         value = {data_termino_edicao}
                         onChange = {(data_termino_edicao) => setData_termino_edicao(data_termino_edicao.target.value)}
                         className = 'campoadd'>
@@ -447,14 +493,14 @@ return (
               style = {{userSelect:'none',
                         marginBottom:'0px',
                         marginTop:'0px'}}
-              >Início: {data_inicio_deletando}
+              >Início: {formatarData(data_inicio_deletando)}
           </h1>
 
           <h1 className = 'letreiro3'
               style = {{userSelect:'none',
                         marginBottom:'0px',
                         marginTop:'0px'}}
-              >Término: {data_termino_deletando}
+              >Término: {formatarData(data_termino_deletando)}
           </h1>
 
           <button className='buttonvlt'>
