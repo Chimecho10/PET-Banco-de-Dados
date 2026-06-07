@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import lupa from '../assets/imagens/lupa.png'
 import add from '../assets/imagens/adicionar_certificados.png'
 import editar from '../assets/imagens/editarparticipante.png'
 import excluir from '../assets/imagens/excluirparticipante.png'
 import sair from '../assets/imagens/sair.png'
+import { listarCertificadosAllAPI, cadastrarCertificadoAPI, atualizarCertificadoAPI, deletarCertificadoAPI } from '../services/certificados'
 
 export default function Aba_Participantes({voltarAbaLobby})
 {
 
 // VARIÁVEIS DE ADICIONAR CERTIFICADO 
+const [idCertificadoSelecionado, setIdCertificadoSelecionado] = useState(null);
 const [janelaAdicionar, setJanelaAdicionar] = useState(null);
 const [id_evento, setEvento] = useState('');
 const [id_aluno, setAluno] = useState('');
@@ -87,35 +89,14 @@ const [horas_deletando, setHoras_deletando] = useState(null);
 const [nomeouevento, setNomeouevento] = useState(''); 
 const [procurando, setProcurando] = useState(false);
 const [buscanalista, setBuscaNaLista] = useState(null);
+const [listaCertificados, setListaCertificados] = useState([]);
 
-// LISTA DE TESTE É A VARIÁVEL RECEBE TODOS CERTIFICADOS QUE ESTÃO NO BANCO DE DADOS
-const listaDeTeste = [
-  { id: 1, id_usuario: 12, id_evento: 155, evento: "Evento 1", horas: 20 },
-  { id: 2, id_usuario: 13, id_evento: 157, evento: "GPEC", horas: 30 },
-  { id: 3, id_usuario: 14, id_evento: 156, evento: "Coding", horas: 40 },
-  { id: 4, id_usuario: 15, id_evento: 113, evento: "Evento 2", horas: 50 },
-  { id: 5, id_usuario: 16, id_evento: 191, evento: "Evento 3", horas: 60 },
-  { id: 6, id_usuario: 17, id_evento: 187, evento: "Evento 4", horas: 70 },
-  { id: 7, id_usuario: 18, id_evento: 104, evento: "Evento 5", horas: 80 },
-];
+useEffect(() => {
+    listarCertificadosAllAPI(setListaCertificados);
+}, []);
 
-// REQUISITOR DE NOMES (CRIA NOVA VARIÁVEL QUE, AGORA, TEM O NOME DOS ALUNOS)
-const requisitarNomeAluno = (idUsuario) => {
-  const bancoDeNomes = {
-    12: "Chimecho",
-    13: "Maria",
-    14: "Piter",
-    15: "Ana",
-    16: "Aline Rios",
-    17: "Julia",
-    18: "Pedro",};
-  return bancoDeNomes[idUsuario] || "Erro ao Encontrar Aluno";
-};
 
-// listaComNomes = VARIAVEL AGORA COM NOMES
-const listaComNomes = listaDeTeste.map((item) => {
-    const name = requisitarNomeAluno(item.id_usuario);
-    return {...item, nome_aluno: name};})
+
 
 const adicionarcertificado = (e) => {
   e.preventDefault()
@@ -261,15 +242,15 @@ return (
                    maxWidth: '1200px',
                    margin: '0 auto',}}>
 
-        {!procurando && listaDeTeste.map((user) => (
+        {!procurando && listaCertificados.map((user) => (
           <div key={user.id} style={{display: 'flex', 
                                      alignItems: 'center',
                                      padding: '10px 0px',
                                      borderBottom: '3px solid #ccc'}}>
 
-            <div className = 'nomeFlex'>{requisitarNomeAluno(user.id_usuario)}</div>
-            <div className = 'nomeFlex'>{user.evento}</div>
-            <div className = 'nomeFlex'>{user.horas}h</div>
+            <div className = 'nomeFlex'>{user.nome_user}</div>
+            <div className = 'nomeFlex'>{user.titulo_evento}</div>
+            <div className = 'nomeFlex'>{user.carga_horaria}h</div>
             <div style={{flex: 1}}>
               <button onClick = {() => deletartrue(user)}
                       style={{userSelect: 'none',
@@ -296,9 +277,9 @@ return (
                                      padding: '10px 0px',
                                      borderBottom: '3px solid #ccc'}}>
             
-            <div className = 'nomeFlex'>{requisitarNomeAluno(user.id_usuario)}</div>
-            <div className = 'nomeFlex'>{user.evento}</div>
-            <div className = 'nomeFlex'>{user.horas}h</div>
+            <div className = 'nomeFlex'>{user.nome_user}</div>
+            <div className = 'nomeFlex'>{user.titulo_evento}</div>
+            <div className = 'nomeFlex'>{user.carga_horaria}h</div>
             <div style={{flex: 1}}>
               <button onClick = {() => deletartrue(user)}
                       style={{userSelect: 'none',
