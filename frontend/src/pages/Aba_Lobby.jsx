@@ -25,7 +25,7 @@ return (
                   </div>
 
           </button>
-          {!admin &&
+          {admin &&
             <div style = {{display: 'flex',
                           gap: '10px'}}>
               <button onClick={eventos}
@@ -41,7 +41,7 @@ return (
                       className='bloquinhoAmarelo'>
               MEUS CERTIFICADOS</button>
             </div>}
-          {admin &&
+          {!admin &&
             <div style = {{display: 'flex',
                           gap: '10px'}}>
               <button onClick={meuscertificados}
