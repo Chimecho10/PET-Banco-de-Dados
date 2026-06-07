@@ -19,9 +19,9 @@ import { enviarLogin } from './services/login.js'
 
 function App() {
   // Abas
-  const [abaInicial, setAbaInicial] = useState(true);
+  const [abaInicial, setAbaInicial] = useState(false);
   const [abaSigin, setAbaSigin] = useState(false);
-  const [abaLobby, setAbaLobby] = useState(false);
+  const [abaLobby, setAbaLobby] = useState(true);
   const [abaEventos, setAbaEventos] = useState(false);
   const [abaParticipantes, setAbaParticipantes] = useState(false);
   const [abaCertificados, setAbaCertificados] = useState(false);
@@ -42,7 +42,7 @@ function App() {
   // Variáveis do Usuário Logado
   const [userLogado, setUserLogado] = useState('');
   const [userCpf, setUserCPF] = useState('');
-  const [admin, setAdmin] = useState(false);
+  const [admin, setAdmin] = useState(true);
 
   // Variáveis de Evento
   const [nomeDoEvento, setNomeDoEvento] = useState('');
@@ -92,14 +92,9 @@ function App() {
     setAbaSigin(true);
   }
 
-  const ir = () => {
-    setAbaInicial(false);
-    setAbaLobby(true);
-  }
-
   const login = (evento) => { 
     const campos = { usuario, senha};
-    const funcoes = { setUsuario, setSenha, setAbaInicial, setAbaLobby };
+    const funcoes = { setUsuario, setSenha, setAbaInicial, setAbaLobby, setAdmin };
     enviarLogin(evento, campos, funcoes);
   }
 

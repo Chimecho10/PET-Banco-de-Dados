@@ -6,6 +6,9 @@ import editar from '../assets/imagens/editarparticipante.png'
 import excluir from '../assets/imagens/excluirparticipante.png'
 import sair from '../assets/imagens/sair.png'
 
+//CONSUMIR API
+import { enviarParticipante, carregarParticipantesAPI, editarParticipanteAPI, deletarParticipanteAPI } from '../services/eventos'
+
 export default function Aba_Participantes({voltarAbaLobby})
 {
 
@@ -53,14 +56,18 @@ const [cpf_deletando, setCpf_deletando] = useState('');
   {e.preventDefault()
     setJanelaDeletar(false);}
 
-  const deletarPart = (e) => {
-    e.preventDefault()
-
-    // INTEGRAR COM O BACKEND (DELETAR CERTIFICADO)
-
-
-    setJanelaDeletar(false);
-  }
+  const deletarPart = async (e) => {
+      try{
+        await deletarParticipantesAPI(id_deletando);
+        carregarParticipantesAPI({setListaDeTeste});
+  
+      }catch(error){
+        console.error(error);
+      }
+  
+  
+      setJanelaDeletar(false);
+    }
 
 
 // VARIÁVEIS DE ADICIONAR PARTICIPANTE 
@@ -76,15 +83,7 @@ const [buscanalista, setBuscaNaLista] = useState(null);
 
 // LISTA DE TESTE É A VARIÁVEL RECEBE TODOS OS USUÁRIOS/PARTICIPANTES QUE ESTÃO NO BANCO DE DADOS
 // NOME E CPF SÃO AS SUB-VARIÁVEIS USADAS PARA ACESSAR O USUÁRIO
-const listaDeTeste = [
-  { id: 1, user: "chimecho", nome: "Francisco Samuel de Souza Silva", cpf: "111.222.333-44" },
-  { id: 2, user: "aline", nome: "Aline Rios", cpf: "555.666.777-88" },
-  { id: 3, user: "piter", nome: "Piter Costa", cpf: "999.888.777-66" },
-  { id: 4, user: "mauricio", nome: "Mauricio", cpf: "123.456.789-00" },
-  { id: 5, user: "cesar", nome: "Cesar Chicote", cpf: "000.000.000-00" },
-  { id: 6, user: "cal", nome: "Calebe Curumirim", cpf: "111.111.111-11" },
-  { id: 7, user: "leo", nome: "Leonardo Gaspar", cpf: "222.222.222-22" },
-];
+const [listaDeTeste, setListaDeTeste] = useState([]);
 
 //CONECTAR COM BACKEND
 const addpartrue = () => {
@@ -114,17 +113,24 @@ const adicionarparticipante = (e) => {
 
   //CONECTAR COM BACKEND A PARTIR DAQUI
   else {
-    const resposta = true;
-
-    //BACKEND AQUI
-
-
-    if (resposta)
-      {alert("Participante Adicionado!");}
-    else 
-      {alert("Erro Interno");}
+  const campos = {username, nome, cpf}
+  const funcoes = {setJanelaEditar, setUsername, setCpf, setNome}
+  try{
+        await enviarParticipante(campos, funcoes);
+        carregarEventosAPI({setListaDeTeste});
+  }catch(error){
+    console.error(error);
   }
+
+  setJanelaEditar(false);
+      }
 }
+
+const login = (evento) => { 
+    const campos = { usuario, senha};
+    const funcoes = { setUsuario, setSenha, setAbaInicial, setAbaLobby, setAdmin };
+    enviarLogin(evento, campos, funcoes);
+  }
 
 const procurarParticipantes = (e) => {
   e.preventDefault();
