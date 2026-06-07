@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 
 import lupa from '../assets/imagens/lupa.png'
 import add from '../assets/imagens/adicionar.png'
@@ -6,10 +6,12 @@ import editar from '../assets/imagens/editarparticipante.png'
 import excluir from '../assets/imagens/excluirparticipante.png'
 import sair from '../assets/imagens/sair.png'
 
+import { carregarEventos } from '../services/users'
+
 export default function Aba_Participantes({voltarAbaLobby})
 {
 
-// VARIÁVEIS DE EDITAR PARTICIPANTE
+// VARIÁVEIS DE EDITAR EVENTO
 const [janelaEditar, setJanelaEditar] = useState(null);
 const [nome_edicao, setNome_edicao] = useState('');
 const [data_inicio_edicao, setData_inicio_edicao] = useState('');
@@ -20,7 +22,7 @@ const [id_evento, setId_evento] = useState('');
    {//ID DO EVENTO QUE ESTÁ SENDO EDITADO
     setId_evento(evento.id);
 
-    //INFORMAÇÕES DO PARTICIPANTE PARA EDITAR
+    //INFORMAÇÕES DO EVENTO PARA EDITAR
     setNome_edicao(evento.nome);
     setData_inicio_edicao(evento.data_de_inicio)
     setData_termino_edicao(evento.data_de_termino)
@@ -77,15 +79,12 @@ const [buscanalista, setBuscaNaLista] = useState(null);
 
 // LISTA DE TESTE É A VARIÁVEL RECEBE TODOS OS EVENTOS QUE ESTÃO NO BANCO DE DADOS
 // NOME É SUB-VARIÁVEIS USADA PARA PESQUISAR O EVENTO
-const listaDeTeste = [
-  { id: 1, nome: "Evento 1", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
-  { id: 2, nome: "Evento 2", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
-  { id: 3, nome: "Evento 3", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
-  { id: 4, nome: "Evento 4", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
-  { id: 5, nome: "Evento 5", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
-  { id: 6, nome: "Evento 6", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
-  { id: 7, nome: "Evento 7", data_de_inicio: "00/00/0000", data_de_termino: "00/00/0000"},
-];
+const [listaDeTeste, setListaDeTeste] = useState([]);
+
+// Este Hook executa a função carregarEventos uma vez, assim que a tela abre.
+useEffect(() => {
+    carregarEventos({setListaDeTeste});
+}, []);
 
 //CONECTAR COM BACKEND
 const addpartrue = () => {
@@ -231,6 +230,7 @@ return (
                        flexDirection: 'row',
                        justifyContent: 'center'}}>
             <div className='letreiroX' style = {{flex: 1}}>NOME</div>
+            <div className='letreiroX' style = {{flex: 1}}>DESCRIÇÃO</div>
             <div className='letreiroX' style = {{flex: 1}}>DATA DE INÍCIO</div>
             <div className='letreiroX' style = {{flex: 1}}>DATA DE TÉRMINO</div>
             <div className='letreiroX' style = {{flex: 1}}>AÇÕES</div>
@@ -242,15 +242,16 @@ return (
                    maxWidth: '1600px',
                    margin: '0 auto',}}>
 
-        {!procurando && listaDeTeste.map((user) => (
-          <div key={user.id} style={{display: 'flex', 
+        {!procurando && listaDeTeste.map((evento) => (
+          <div key={evento.id} style={{display: 'flex', 
                                      alignItems: 'center',
                                      padding: '10px 0px',
                                      borderBottom: '3px solid #ccc'}}>
             
-            <div className = 'nomeFlex'>{user.nome}</div>
-            <div className = 'nomeFlex'>{user.data_de_inicio}</div>
-            <div className = 'nomeFlex'>{user.data_de_termino}</div>
+            <div className = 'nomeFlex'>{evento.titulo}</div>
+            <div className = 'nomeFlex'>{evento.texto}</div>
+            <div className = 'nomeFlex'>{evento.data_inicio}</div>
+            <div className = 'nomeFlex'>{evento.data_fim}</div>
             <div style={{flex: 1}}>
               <button onClick = {() => deletartrue(user)}
                       style={{userSelect: 'none',

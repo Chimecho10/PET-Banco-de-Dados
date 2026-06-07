@@ -25,7 +25,8 @@ def login_user(login: LoginSchema):
     )
     return {
         "access_token": access_token,
-        "token_type": "bearer"
+        "token_type": "bearer",
+        "admin" : user.adm
     }
 
 @router.post("/cadastro", status_code=201)

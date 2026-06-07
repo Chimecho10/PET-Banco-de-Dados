@@ -99,7 +99,7 @@ function App() {
 
   const login = (evento) => { 
     const campos = { usuario, senha};
-    const funcoes = { setUsuario, setSenha, setAbaInicial, setAbaLobby };
+    const funcoes = { setUsuario, setSenha, setAbaInicial, setAbaLobby, setAdmin };
     enviarLogin(evento, campos, funcoes);
   }
 

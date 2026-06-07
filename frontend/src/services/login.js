@@ -4,7 +4,7 @@ export const enviarCadastro = async (evento, campos, funcoes) => {
     // Desestruturando os dados que vieram do formulário
     const { usuarioCadastro, senha1, senha2, cpf, nome } = campos;
     // Desestruturando as funções de alteração de estado
-    const { setUsuarioCadastro, setSenha1, setSenha2, setCpf, setNome, setAbaSigin, setAbaInicial } = funcoes;
+    const { setUsuarioCadastro, setSenha1, setSenha2, setCpf, setNome, setAbaSigin, setAbaInicial} = funcoes;
 
     // Validações
     if (usuarioCadastro === '' || senha1 === '' || senha2 === '' || cpf === '' || nome === '') {
@@ -28,7 +28,7 @@ export const enviarCadastro = async (evento, campos, funcoes) => {
     };
     
     try {
-        const resp = await fetch('http://127.0.0.1:8000/cadastro', {
+        const resp = await fetch('http://localhost:8000/cadastro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
@@ -58,7 +58,7 @@ export const enviarLogin = async (evento, campos, funcoes) =>{
     // Desestruturando os dados que vieram do formulário
     const { usuario, senha} = campos;
     // Desestruturando as funções de alteração de estado
-    const { setUsuario, setSenha,setAbaInicial, setAbaLobby } = funcoes;
+    const { setUsuario, setSenha,setAbaInicial, setAbaLobby, setAdmin } = funcoes;
 
     const dados = {
     username: usuario,
@@ -66,7 +66,7 @@ export const enviarLogin = async (evento, campos, funcoes) =>{
     };
 
         try {
-        const resp = await fetch('http://127.0.0.1:8000/login', {
+        const resp = await fetch('http://localhost:8000/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
@@ -78,8 +78,10 @@ export const enviarLogin = async (evento, campos, funcoes) =>{
 
         // 2. Salva o access_token no localStorage do navegador
         localStorage.setItem('token', dadosResposta.access_token);
-
+        console.log(dadosResposta)
         alert("Login realizado com sucesso.");
+        if(dadosResposta.admin == 1) setAdmin(true);
+        else setAdmin(false);
         // Limpando os dados do formulário
         setUsuario('');
         setSenha('');
