@@ -5,7 +5,10 @@ from routers import login_router, users_router, eventos_router, certificados_rou
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
 ]
 
 app.add_middleware(

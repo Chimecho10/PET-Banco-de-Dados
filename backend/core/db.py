@@ -15,11 +15,11 @@ import pymysql
 class ConnectionDB:
     def __enter__(self):
         self.connection = pymysql.connect(
-            host= "mysql",
+            host= "localhost",
             port= 3306,
-            user= "app_user",
-            password= "app_password",
-            database= "app_db",
+            user= "root",
+            password= "Samuel1012.",
+            database= "sistema_certificados",
             charset="utf8mb4"
         )
         self.cursor = self.connection.cursor()
