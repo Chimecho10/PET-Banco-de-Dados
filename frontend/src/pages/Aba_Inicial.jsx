@@ -38,7 +38,8 @@ return(
 
         <form onSubmit = {ir}>
             <div className= 'discoInput'
-                style = {{marginTop: '7px'}}>
+                style = {{marginTop: '7px',
+                          display: 'flex',}}>
 
             <div className= 'letreiroDiscoInput'
             >Usuário:</div>
@@ -62,11 +63,14 @@ return(
                     onChange = {(senha) => setSenha(senha.target.value)}
                     className = 'campo2'>   
             </input>
-            <input type = "submit"
-                    value= "Enviar">
-                    
-            </input>
-
+            </div>
+            <div style = {{marginBottom: '5px',
+                           marginTop:'20px'}}>
+                <input  className='enviarr'
+                        type = "submit"
+                        value= "Enviar">
+                        
+                </input>
             </div>
 
         </form>
