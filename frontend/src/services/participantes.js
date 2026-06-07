@@ -1,6 +1,39 @@
+export const editarParticipanteAPI = async (campos, funcoes) => {
+    const {nome_edicao, cpf_edicao, username_edicao, id_part} = campos;
+    const {setNome_edicao, setCpf_edicao, setUsername_edicao, setId_part} = funcoes;
+
+    const dados = {
+        nome_edicao: nome_edicao,
+        cpf_edicao: cpf_edicao,
+        username_edicao: username_edicao,
+        id_part: id_part
+    };
+    try {
+        const resp = await fetch(`http://localhost:8000/users/{id_part}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json',
+                    'Authorization' : `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(dados)
+        });
+
+        if (resp.ok) {
+        alert("Participante Editado.");
+
+        // Limpando os dados do formulário
+        setNome_edicao('');
+        setCpf_edicao('');
+        setUsername_edicao('');
+        setId_part('');
+        }
+    } catch {
+        alert("Erro ao editar evento.");
+    }
+};
+
 export const deletarParticipanteAPI = async (id_participante) => {
     try {
-        const resp = await fetch(`http://localhost:8000/eventos/${id_participante}`, {
+        const resp = await fetch(`http://localhost:8000/users/{id_participante}`, {
             method: 'DELETE',
             headers: { 
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -57,7 +90,7 @@ export const enviarParticipante = async (evento, campos, funcoes) => {
         cpf: cpf,};
     
     try {
-        const resp = await fetch('http://localhost:8000/users/me', {
+        const resp = await fetch('http://localhost:8000/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)

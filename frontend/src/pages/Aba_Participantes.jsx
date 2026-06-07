@@ -7,7 +7,7 @@ import excluir from '../assets/imagens/excluirparticipante.png'
 import sair from '../assets/imagens/sair.png'
 
 //CONSUMIR API
-import { enviarParticipante, carregarParticipantesAPI, editarParticipanteAPI, deletarParticipanteAPI } from '../services/eventos'
+import { enviarParticipante, carregarParticipantesAPI, editarParticipanteAPI, deletarParticipanteAPI } from '../services/participantes.js'
 
 export default function Aba_Participantes({voltarAbaLobby})
 {
@@ -33,10 +33,20 @@ const [id_part, setId_part] = useState('');
     {e.preventDefault()
      setJanelaEditar(false);}
 
-  const editarPart = (e) =>
-    { e.preventDefault()
-      // INTEGRAR COM O BACKEND (EDIÇÃO DE CERTIFICADO)
-    }
+  const editarPart = async(e) =>
+      { e.preventDefault();
+        const campos = {nome_edicao, cpf_edicao, username_edicao, id_part};
+        const funcoes = {setNome_edicao, setCpf_edicao, setUsername_edicao, setId_part};
+  
+        try{
+          await editarParticipanteAPI(campos, funcoes);
+          carregarParticipantesAPI({setListaDeTeste});
+        }catch(error){
+          console.error(error);
+        }
+  
+        setJanelaEditar(false);
+      }
 
 // DELETAR CERTIFICADO
 const [janelaDeletar, setJanelaDeletar] = useState(null);
@@ -98,7 +108,7 @@ const desaddpartrue = () => {
   setJanelaAdicionar(false);
 }
 
-const adicionarparticipante = (e) => {
+const adicionarparticipante = async (e) => {
   e.preventDefault()
   if (username === '' || cpf === '' || nome === '')
     {alert("Espaço em Branco!")}
@@ -117,7 +127,7 @@ const adicionarparticipante = (e) => {
   const funcoes = {setJanelaEditar, setUsername, setCpf, setNome}
   try{
         await enviarParticipante(campos, funcoes);
-        carregarEventosAPI({setListaDeTeste});
+        carregarParticipantesAPI({setListaDeTeste});
   }catch(error){
     console.error(error);
   }
