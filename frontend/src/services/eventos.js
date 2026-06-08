@@ -1,5 +1,5 @@
 export const carregarEventosAPI = async (funcoes) => {
-    const {setListaDeTeste} = funcoes
+    const {setListaDeTeste} = funcoes;
     try {
         
         const token = localStorage.getItem('token'); 

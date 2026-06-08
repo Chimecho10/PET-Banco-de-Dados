@@ -20,7 +20,7 @@ const [buscanalista, setBuscaNaLista] = useState(null);
 const [listaCertificados, setListaCertificados] = useState([]);
 
 useEffect(() => {
-    listarCertificadosAPI(setListaCertificados);
+    listarCertificadosAPI({setListaCertificados});
 }, []);
 
 const procurarParticipantes = (e) => {

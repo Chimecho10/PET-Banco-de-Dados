@@ -1,6 +1,7 @@
 const BASE_URL = 'http://localhost:8000/certificados';
 
-export const listarCertificadosAPI = async (setListaCertificados) =>{
+export const listarCertificadosAPI = async (funcoes) =>{
+    const {setListaCertificados} = funcoes;
     try {
         
         const token = localStorage.getItem('token'); 

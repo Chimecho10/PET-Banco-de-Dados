@@ -3,13 +3,13 @@ export const editarParticipanteAPI = async (campos, funcoes) => {
     const {setNome_edicao, setCpf_edicao, setUsername_edicao, setId_part} = funcoes;
 
     const dados = {
-        nome_edicao: nome_edicao,
-        cpf_edicao: cpf_edicao,
-        username_edicao: username_edicao,
-        id_part: id_part
+        nome: nome_edicao,
+        cpf: cpf_edicao,
+        username: username_edicao
     };
+    
     try {
-        const resp = await fetch(`http://localhost:8000/users/{id_part}`, {
+        const resp = await fetch(`http://localhost:8000/users/${id_part}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json',
                     'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -18,22 +18,25 @@ export const editarParticipanteAPI = async (campos, funcoes) => {
         });
 
         if (resp.ok) {
-        alert("Participante Editado.");
+            alert("Participante Editado.");
 
-        // Limpando os dados do formulário
-        setNome_edicao('');
-        setCpf_edicao('');
-        setUsername_edicao('');
-        setId_part('');
+            // Limpando os dados do formulário
+            if(setNome_edicao) setNome_edicao('');
+            if(setCpf_edicao) setCpf_edicao('');
+            if(setUsername_edicao) setUsername_edicao('');
+            if(setId_part) setId_part('');
+            return true; // Retorna true para o componente saber que deu certo e fechar o modal
         }
-    } catch {
-        alert("Erro ao editar evento.");
+        return false;
+    } catch (error) {
+        alert("Erro ao editar participante.");
+        return false;
     }
 };
 
 export const deletarParticipanteAPI = async (id_participante) => {
     try {
-        const resp = await fetch(`http://localhost:8000/users/{id_participante}`, {
+        const resp = await fetch(`http://localhost:8000/users/${id_participante}`, {
             method: 'DELETE',
             headers: { 
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
@@ -42,19 +45,19 @@ export const deletarParticipanteAPI = async (id_participante) => {
 
         if (resp.ok) {
             alert("Participante deletado com sucesso!");
+            return true;
         } else {
             alert("Erro ao deletar o participante.");
-    
+            return false;
         }
     } catch (error) {
-        alert("Erro ao deletar evento.");
+        alert("Erro de rede ao deletar participante.");
+        return false;
     }
 };
 
-export const carregarParticipantesAPI = async (funcoes) => {
-    const {setListaDeTeste} = funcoes
+export const carregarParticipantesAPI = async (setListaDeTeste) => {
     try {
-        
         const token = localStorage.getItem('token'); 
         
         const resp = await fetch('http://localhost:8000/users', {
@@ -67,7 +70,12 @@ export const carregarParticipantesAPI = async (funcoes) => {
 
         if (resp.ok) {
             const dados = await resp.json();
-            setListaDeTeste(dados); 
+            
+            if (typeof setListaDeTeste === 'function') {
+                setListaDeTeste(dados); 
+            } else if (setListaDeTeste.setListaDeTeste) {
+                setListaDeTeste.setListaDeTeste(dados);
+            }
         } else {
             console.error("Erro ao buscar participantes do servidor");
         }
@@ -77,37 +85,44 @@ export const carregarParticipantesAPI = async (funcoes) => {
 };
 
 export const enviarParticipante = async (evento, campos, funcoes) => {
-    evento.preventDefault();
+    // Evita o recarregamento da página
+    if (evento && typeof evento.preventDefault === 'function') {
+        evento.preventDefault();
+    }
 
-    // Desestruturando os dados que vieram do formulário
     const { username, nome, cpf } = campos;
-    // Desestruturando as funções de alteração de estado
     const { setJanelaEditar, setUsername, setCpf, setNome } = funcoes;
 
-    const dados =
-       {username: username,
+    const dados = {
+        username: username,
         nome: nome,
-        cpf: cpf,};
+        cpf: cpf,
+    };
     
     try {
         const resp = await fetch('http://localhost:8000/users', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+         },
         body: JSON.stringify(dados)
         });
 
         if (resp.ok) {
-        alert("Participante Adicionado!");
+            alert("Participante Adicionado!");
 
-        // Limpando os dados do formulário
-        setUsername('');
-        setCpf('');
-        setNome('');
+            // Limpando os dados do formulário
+            if(setUsername) setUsername('');
+            if(setCpf) setCpf('');
+            if(setNome) setNome('');
 
-        // Fechando Janela
-        setJanelaEditar(false);
+            // Fechando Janela
+            if(setJanelaEditar) setJanelaEditar(false);
+            return true;
         }
-    } catch {
+        return false;
+    } catch (error) {
         alert("Erro ao Adicionar");
+        return false;
     }
 };
